@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="../style/login.css" rel="stylesheet">
+</head>
+<body>
+    <h1>Login</h1>
+    <form method="post">
+    <div>
+        <input type="text" id="username" name="username" autofocus >
+        <input type="password" id="password" name="password">
+        <input type="submit"> <br>
+        <a href="../blog/register">Register</a>
+        <% if (typeof error !== 'undefined') { %>
+       
+            <p class="error-info"><%= error %></p>
+         
+       <% } %>
+    </div>
+</form>    
+</body>
+<script src="../js/login.js"></script>
+</html>
