@@ -1,0 +1,58 @@
+GIT add: Git tracked ab sofort diese Files. Git ist dann im Staging Environment.
+GIT commit: git speicher quasi den aktuellen stand ab
+
+
+GIT cheatsheet
+
+git init   // git rep erstellen
+git add <filename> oder --all  //Git tracked ab sofort diese Files. Git ist dann im Staging Environment.
+git config --global init.default branch main   // default branch "main" nennen
+git config --global user.name "name"   // user name setzen
+git config --global user.email "sdfsa"  // email setzen
+ 
+git status // gibt status aus
+git commit -m "Hier die Commit Message"      // git speicher quasi den aktuellen stand ab
+	git commit -a -m "message"     // git add schritt wird übersprungen
+git commit -m "message" --amend // bearbeitet den letzten commmit, nützlich wenn man zb an der message was ändern möchte
+git restore "filename" // bringt eine gelöschte datei zurück, die von git getracked wurde
+git log // gibt den log aus
+	git log --online // gibt log kompakt aus
+git log -p // gibt genauerer angaben zum log  (Pfeil nach unten zum weiter scrollen, "q" drücken um mode zu beenden)
+git diff // gibt die Änderungen an den Dateien aus wenn sie getracked wurden und dann nochmal geändert wurden.
+git reset <git-id> // zum älteren commit zurück gehen
+
+
+## branches 
+
+Sind dazu da um am projekt zu arbeiten und zu commiten, ohne das Programm in main branch zu beeinflussen. Zum Schluss kann dann der 
+andere Branch in den main Branch gemerget werden.
+
+git branch <BranchName> //erstellt einen neuen Branch
+	git switch -c <branchName> erstellt einen neuen Branch und wechselt dorthin
+git branch   // gibt alle aktuellen branches aus
+git switch <branchName> // wechselt in einen anderen branch
+git merge -m "message" <branchName>   // merged den anderen branch in den master branch
+git branch -d <branchName> // löscht einen Branch
+
+## github
+ // startup
+git remote add origin https://github.com/alex-3709537/WebEngineeringProjectTest.git
+git branch -M main
+git push -u origin main
+
+git push --all  // alle branches auf github hochladen
+git fetch  // inhalte von der github cloud in das lokale rep laden
+git merge // merged die gefetchedten inhalte in das lokale project
+git pull // git fetch und merge in einem schritt
+
+
+Andere sourcen : 
+
+- Sample files to follow along: https://www.youtube.com/redirect?event=video_description&redir_token=QUFFLUhqa0lpN0k5aU01anVqLTZKdUNBcFRCMFU5cXJPUXxBQ3Jtc0tsVTlwd29YNVRzWkNpMDlUUW84MTRHd2RhOHpzcUxsdWtvTXFTRlZDRWE4Z3BQOS1rZVN2YzVqYlNwdlZtaGtkcXMySV9XMElrQVU0Vmk0Sm9HUTdWN3JPOS1TcFlDLVM0R084RTJrd0lWR09WRXRfZw&q=https%3A%2F%2F1drv.ms%2Fu%2Fs%21AmxrofZZlZ-whOIll3D3rv-iWMxqYw%3Fe%3DJsqfMu&v=tRZGeaHPoaw
+- Official Git web site: https://www.git-scm.com/
+- Official GitHub.com web site: https://github.com/
+- Git and GitHub.com cheat sheet: https://www.youtube.com/redirect?event=video_description&redir_token=QUFFLUhqa0ZZU0dLSFhJeFd3ZV9VQmpVS1F2S2JfOE5WZ3xBQ3Jtc0ttdEN3eUltTEpEYzJ5MDVIWkQtX1hCUm1PN0tZZkpJYWJHTTNpVWFYamVrSHhkZlZkNFNpQjVVMFFxRm5vNHdqUGdjT3h5Ml9rMnZ4dWJtRC1OVENfeC1kdjVwb09NTHlHUFZqUjNCekl4VW1uYWpKSQ&q=https%3A%2F%2Feducation.github.com%2Fgit-cheat-sheet-education.pdf&v=tRZGeaHPoaw
+- Git Reference Manual: http://git-scm.com/docs
+- Git Overview Book: http://git-scm.com/book/en/v2
+- Sample ignore files: https://github.com/github/gitignore
+- Hyper.is Terminal: https://hyper.is/

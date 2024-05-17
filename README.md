@@ -50,6 +50,9 @@ mit Node js auf azure Datenbank zugreifen
 Datenbak feld typen 
 	https://www.w3schools.com/sql/sql_datatypes.asp
 
+GIT 
+	https://www.youtube.com/watch?v=mJ-qvsxPHpY
+
 ## Roadmap
  - [ ] Project in repository hochladen sodass jeder zugriff hat und arbeiten kann
  - [ ] Jeder Zugriff auf Azure Datenbank
