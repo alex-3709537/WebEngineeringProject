@@ -4,6 +4,7 @@
 
 ### Node Version manager und Node js isntallieren + package manager
 
+0. test
 1. NVM installieren:
 	https://github.com/coreybutler/nvm-windows/releases -> nvm-setup.exe installieren und ausführen
 	mit `nvm -v` prüfen ob installation erfolgreich
