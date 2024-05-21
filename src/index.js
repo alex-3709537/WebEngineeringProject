@@ -1,10 +1,10 @@
 const express = require("express");
-//const http = require("http");
-//const SQLHandler = require("./model/sqlHandler");
+
 const app = express();
 const port = 4000;
-//const mysql = require("mysql");
+
 const login = require("./routes/login");
+const user = require("./routes/user");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
@@ -22,10 +22,10 @@ app.use(session({
     resave: false
 })); // Hier wird cookie gesetzt
 // support req objects
-
 app.use(express.json());       // to support JSON-encoded bodies
 app.use(express.urlencoded()); // to support URL-encoded bodies
 app.use("/blog", login);
+app.use("/blog/user", user);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'view'));
 

@@ -11,7 +11,8 @@ const loginUser = async (req, res) => {
     const {username, password} = req.body
     const user = await getUser(req.body.username);
     
-    if(user.length > 0 && user[0].username == username && user[0].password == password){
+
+    if(Object.keys(user).length > 0 && user.username == username && user.password == password){
         
         var newUser = { username: username , password : password};
         req.session.user =   newUser// credentails im cookie speichern
@@ -57,9 +58,9 @@ const checkSignedIn = (req, res, next) => {
     
     if(req.session.user){
         next();     //If session exists, proceed to page
-     } else {
+    } else {
         res.redirect("login");
-     }
+    }
 }
 
 const registrationSuccessView = (req, res) => {

@@ -6,7 +6,7 @@ async function getUser(username) {
     try{
         const result = await connectAndQuery(`SELECT * FROM users WHERE username like '${username}'`);
 
-        return result.recordset;
+        return result.recordset[0];
     }catch (err) {
         console.error(err.message);
     }
@@ -51,7 +51,7 @@ function sqlTestLog(resultSet) {
 
     // ouput row contents from default record set
     resultSet.recordset.forEach(row => {
-        console.log("%s\t%s", row.username, row.pw);
+        console.log("%s\t%s", row.username, row.password);
     });
 }
 
