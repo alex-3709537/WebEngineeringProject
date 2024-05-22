@@ -9,18 +9,18 @@ const loginUser = async (req, res) => {
     // check in datenbank ob user und password stimmen
 
     const {username, password} = req.body
-    const user = await getUser(req.body.username);
     
-
-    if(Object.keys(user).length > 0 && user.username == username && user.password == password){
+    const result = await getUser(req.body.username);
+    
+    
+    if(result != "error" && Object.keys(result).length > 0 && result.username == username && result.password == password){
         
         var newUser = { username: username , password : password};
-        req.session.user =   newUser// credentails im cookie speichern
+        req.session.user = newUser;// credentails im cookie speichern
 
-        console.log(req.session.user);
         res.redirect("home");  
     }else{
-        res.render("login", {error: "Falsche Daten"})
+        res.render("login", {error: "Anmeldung Fehlgeschlagen"})
     }
    
 }
@@ -31,10 +31,10 @@ const registerView = (req, res) => {
 
 const registerUser = async (req, res) => {
     
-    const user = await getUser(req.body.username);
+    const result = await getUser(req.body.username);
 
     // check if user already exist
-    if(user.length == 0){
+    if(result != "error" && Object.keys(result).length == 0){
         setUser(req.body.username, req.body.password);
         req.session.user = { username: req.body.username , password : req.body.password};  // credentails im cookie speichern
         res.redirect("register/success");
@@ -59,7 +59,7 @@ const checkSignedIn = (req, res, next) => {
     if(req.session.user){
         next();     //If session exists, proceed to page
     } else {
-        res.redirect("login");
+        res.redirect("/blog/login");
     }
 }
 

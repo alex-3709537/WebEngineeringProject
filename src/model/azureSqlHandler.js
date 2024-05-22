@@ -5,10 +5,11 @@ const config = require("../config/databaseAzure");
 async function getUser(username) {
     try{
         const result = await connectAndQuery(`SELECT * FROM users WHERE username like '${username}'`);
-
-        return result.recordset[0];
+        
+        return (result.recordset[0] == undefined)? {} : result.recordset[0];
     }catch (err) {
         console.error(err.message);
+        return "error";
     }
 }
 
@@ -20,6 +21,7 @@ async function setUser(username, password) {
         return result;
     }catch (err) {
         console.error(err.message);
+        return "error";
     }
 }
 

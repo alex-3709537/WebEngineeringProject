@@ -8,6 +8,8 @@ const user = require("./routes/user");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const { checkSignedIn } = require("./controller/loginController");
+const { pageNotFound } = require("./controller/errorController");
 
 
 
@@ -23,9 +25,18 @@ app.use(session({
 })); // Hier wird cookie gesetzt
 // support req objects
 app.use(express.json());       // to support JSON-encoded bodies
-app.use(express.urlencoded()); // to support URL-encoded bodies
+app.use(express.urlencoded({ extended : true })); // to support URL-encoded bodies
+
 app.use("/blog", login);
-app.use("/blog/user", user);
+app.use("/blog/user", checkSignedIn, user);
+
+app.use(pageNotFound);
+/*
+app.use((req, res, next) => {
+    res.status(404).send('Page not found');
+});
+*/
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'view'));
 
@@ -33,10 +44,3 @@ app.set('views', path.join(__dirname, 'view'));
 app.listen(port, () => {
     console.log("app listen on port", port);
 })
-/*
-async function foo(){
-    const user = await getUser("alex");
-console.log(user);
-}
-foo();
-*/

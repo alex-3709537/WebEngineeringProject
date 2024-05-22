@@ -5,9 +5,10 @@ const {
     profileView
 
 } = require("../controller/userController");
-const { checkSignedIn } = require("../controller/loginController");
 
 
-router.get("/profile", checkSignedIn, profileView);
+router.get("/profile",  profileView);
+
+
 
 module.exports =  router;
