@@ -7,8 +7,8 @@ const {
     loginUser,
     loginView,
     checkSignedIn,
-    homeView,
-    registrationSuccessView
+    registrationSuccessView,
+    logOut
 } = require("../controller/loginController");
 
 router.get("/", function (req, res) {
@@ -18,9 +18,9 @@ router.get("/", function (req, res) {
 
 router.get("/login", loginView);
 
-router.get("/home", checkSignedIn, homeView);
-
 router.post("/login", loginUser);
+
+router.post("/logout", logOut);
 
 router.post("/register", registerUser);
 

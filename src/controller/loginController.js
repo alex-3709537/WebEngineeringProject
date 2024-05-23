@@ -3,6 +3,7 @@ const path = require("path");
 const {getUser,
     setUser
 } = require("../model/azureSqlHandler");
+const { log } = require("console");
 
 
 const loginUser = async (req, res) => {
@@ -50,9 +51,6 @@ const loginView = (req, res) => {
 
 }
 
-const homeView = (req, res) => {
-    res.render('home', {username: req.session.user.username})
-}
 
 const checkSignedIn = (req, res, next) => {
     
@@ -61,6 +59,11 @@ const checkSignedIn = (req, res, next) => {
     } else {
         res.redirect("/blog/login");
     }
+}
+
+const logOut = (req, res) => {
+    req.session.destroy();
+    res.redirect("/blog/login");
 }
 
 const registrationSuccessView = (req, res) => {
@@ -72,7 +75,7 @@ module.exports = {
     registerUser,
     loginUser,
     loginView,
-    homeView,
     checkSignedIn,
-    registrationSuccessView
+    registrationSuccessView,
+    logOut
 }
