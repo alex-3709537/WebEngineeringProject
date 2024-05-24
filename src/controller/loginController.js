@@ -5,7 +5,9 @@ const {getUser,
 } = require("../model/azureSqlHandler");
 const { log } = require("console");
 
-
+/**
+ * prüft ob die Login Daten aus dem Formular stimmen und speicher sie ggf. in einen Cookie
+ */
 const loginUser = async (req, res) => {
     // check in datenbank ob user und password stimmen
 
@@ -14,7 +16,7 @@ const loginUser = async (req, res) => {
     const result = await getUser(req.body.username);
     
     
-    if(result != "error" && Object.keys(result).length > 0 && result.username == username && result.password == password){
+    if(!(result instanceof Error) && Object.keys(result).length > 0 && result.username == username && result.password == password){
         
         var newUser = { username: username , password : password};
         req.session.user = newUser;// credentails im cookie speichern
@@ -26,22 +28,28 @@ const loginUser = async (req, res) => {
    
 }
 
+/**
+ * Rendert das Registrier Formular
+ */
 const registerView = (req, res) => {
     res.render("register");
 }
 
+/**
+ * Legt einen neuen Nutzer an
+ */
 const registerUser = async (req, res) => {
     
     const result = await getUser(req.body.username);
 
-    // check if user already exist
-    if(result != "error" && Object.keys(result).length == 0){
+    if(result instanceof Error){
+        res.render("register",{error: "Etwas ist schief gelaufen..."});   
+    }else if(Object.keys(result).length == 0){
+        res.render("register",{error: "Der Benutzername ist bereits vergeben!"});   
+    }else{
         setUser(req.body.username, req.body.password);
         req.session.user = { username: req.body.username , password : req.body.password};  // credentails im cookie speichern
         res.redirect("register/success");
-        
-    }else{
-        res.render("register",{error: "Der Benutzername ist bereits vergeben!"});        
     }
  
 } 
@@ -51,7 +59,9 @@ const loginView = (req, res) => {
 
 }
 
-
+/**
+ * Prüft ob der Nutzer bereits angemeldet ist (schaut im cookie nach)
+ */
 const checkSignedIn = (req, res, next) => {
     
     if(req.session.user){
@@ -61,11 +71,17 @@ const checkSignedIn = (req, res, next) => {
     }
 }
 
+/**
+ * Logt den user aus
+ */
 const logOut = (req, res) => {
     req.session.destroy();
     res.redirect("/blog/login");
 }
 
+/**
+ * Lädt die Oberfläche nach erfogreicher Registrierung
+ */
 const registrationSuccessView = (req, res) => {
     res.render("registrationSuccess");
 }

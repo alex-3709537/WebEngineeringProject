@@ -9,7 +9,7 @@ async function getUser(username) {
         return (result.recordset[0] == undefined)? {} : result.recordset[0];
     }catch (err) {
         console.error(err.message);
-        return "error";
+        return err;
     }
 }
 
@@ -21,7 +21,7 @@ async function setUser(username, password) {
         return result;
     }catch (err) {
         console.error(err.message);
-        return "error";
+        return err;
     }
 }
 

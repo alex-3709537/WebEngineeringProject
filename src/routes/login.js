@@ -6,7 +6,6 @@ const {
     registerUser,
     loginUser,
     loginView,
-    checkSignedIn,
     registrationSuccessView,
     logOut
 } = require("../controller/loginController");

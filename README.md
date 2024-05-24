@@ -54,9 +54,26 @@ GIT
 	https://www.youtube.com/watch?v=mJ-qvsxPHpY
 
 ## Roadmap
- - [ ] Project in repository hochladen sodass jeder zugriff hat und arbeiten kann
- - [ ] Jeder Zugriff auf Azure Datenbank
- - [ ] Alle auf Gleichen Stand (MVC, frameworks)
- - [ ] Name von Website überlegen
- - [ ] Datenbank Struktur überlegen (Grob)
+ - [x] Project in repository hochladen sodass jeder zugriff hat und arbeiten kann
+ - [x] Jeder Zugriff auf Azure Datenbank
+ - [x] Alle auf Gleichen Stand (MVC, frameworks)
+ - [ ] Name von Website überlegen 
+ - [ ] Datenbank Struktur überlegen (Grob) 
  - [ ] Überblick über Projektmanagement Aufgabe verschaffen
+
+ - [ ] Erste Text Posts schreiben (Alex)
+ - [ ] Feed immer im Hintergrund aktualisieren und neue Posts suchen (Lukas)
+ - [ ] Freunde adden und Freundesliste anzeigen (Sebastian)
+
+
+## Features
+ - [x] Accounts anlegen
+ - [ ] Posts hochladen (Text, Bilder, Videos) 
+ - [ ] Andere Nutzer adden
+ - [ ] Private Accoutns
+ - [ ] Recent Posts anzeigen
+ - [ ] Nur Posts von Freunden anzeigen
+ - [ ] Liken und kommentieren
+ - [ ] Inhalte löschen und editieren
+ 
+ 
