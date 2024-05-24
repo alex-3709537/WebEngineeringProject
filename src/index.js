@@ -6,6 +6,8 @@ const port = 8080;
 const login = require("./routes/login");
 const user = require("./routes/user");
 const index = require("./routes/index");
+const post = require("./routes/post");
+
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
@@ -33,6 +35,8 @@ app.use(express.urlencoded({ extended : true })); // to support URL-encoded bodi
 app.use("/blog", login);
 app.use("/blog/user", checkSignedIn, user);
 app.use("/blog/home", checkSignedIn, index);
+app.use("/blog/post", checkSignedIn ,post);
+
 app.use(pageNotFound);
 
 

@@ -25,12 +25,23 @@ async function setUser(username, password) {
     }
 }
 
+async function setPost(username, post){
+    try{
+        const result = await connectAndQuery(`INSERT INTO post (username, post, date) VALUES('${username}','${post}', CURRENT_TIMESTAMP)`);
+
+        return result;
+    }catch(err){
+        console.error(err.message)
+        return err;
+    }
+}
+
 async function connectAndQuery(query) {
     try {
         var poolConnection = await sql.connect(config);
 
         var resultSet = await poolConnection.request().query(query);
-        sqlTestLog(resultSet);
+        //sqlTestLog(resultSet);
 
 
         // close connection only when we're certain application is finished
@@ -40,6 +51,8 @@ async function connectAndQuery(query) {
         console.error(err.message);
     }
 }
+
+
 
 function sqlTestLog(resultSet) {
     console.log(`${resultSet.recordset.length} rows returned.`);
@@ -59,5 +72,6 @@ function sqlTestLog(resultSet) {
 
 module.exports = {
     getUser,
-    setUser
+    setUser,
+    setPost
 }

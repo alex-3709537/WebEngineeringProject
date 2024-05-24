@@ -44,7 +44,7 @@ const registerUser = async (req, res) => {
 
     if(result instanceof Error){
         res.render("register",{error: "Etwas ist schief gelaufen..."});   
-    }else if(Object.keys(result).length == 0){
+    }else if(Object.keys(result).length != 0){
         res.render("register",{error: "Der Benutzername ist bereits vergeben!"});   
     }else{
         setUser(req.body.username, req.body.password);
