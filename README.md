@@ -70,7 +70,7 @@ GIT
  - [x] Accounts anlegen
  - [ ] Posts hochladen (Text, Bilder, Videos) 
  - [ ] Andere Nutzer adden
- - [ ] Private Accoutns
+ - [ ] Private Accounts
  - [ ] Recent Posts anzeigen
  - [ ] Nur Posts von Freunden anzeigen
  - [ ] Liken und kommentieren
