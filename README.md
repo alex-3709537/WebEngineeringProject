@@ -30,8 +30,8 @@
 4. install session manager
 	`npm install express-session`
 
-5. install mssql
-	`npm install mssql`
+5. install mysql
+	`npm install mysql`
 
 ## Dokumentation
 

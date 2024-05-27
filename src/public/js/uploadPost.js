@@ -1,8 +1,9 @@
 
 //const {servername} = require("../../config/server");  npm install -g browserify verwenden damit das funktioniert
+import { getPostContainer } from "./builder.js";
+
 
 const servername = "localhost:8080";
-
 
 document.getElementById("post-text-button").addEventListener("click", createPost);
 document.getElementById("post-text-field").addEventListener("keydown", checkInputField)
@@ -34,13 +35,11 @@ function createPost(){
             return response.json(); // Die Antwort in ein JSON-Objekt umwandeln
           })
           .then(data => {
-            console.log('Success:', data); // Erfolgreiche Antwort verarbeiten
+            console.log('Result:', data); // Erfolgreiche Antwort verarbeiten
 
-            const p = document.createElement("p");
-            p.setAttribute("id", "");
-            p.innerHTML = post;
-            document.getElementById("post-field").append(p);
-
+            const article = (data.message == "error") ? document.createElement("p").innerHTML = "Something went wrong :/ ..." : getPostContainer("User", post);
+            
+            document.getElementById("post-field").append(article);
           })
           .catch(error => {
             console.error('There was a problem with your fetch operation:', error); // Fehlerbehandlung

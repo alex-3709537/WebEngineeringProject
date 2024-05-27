@@ -2,7 +2,7 @@
 const path = require("path");
 const {getUser,
     setUser
-} = require("../model/azureSqlHandler");
+} = require("../model/mysqlHandler");
 const { log } = require("console");
 
 /**
@@ -15,11 +15,13 @@ const loginUser = async (req, res) => {
     
     const result = await getUser(req.body.username);
     
-    
     if(!(result instanceof Error) && Object.keys(result).length > 0 && result.username == username && result.password == password){
         
-        var newUser = { username: username , password : password};
-        req.session.user = newUser;// credentails im cookie speichern
+        req.session.user = { 
+            username: req.body.username, 
+            password : req.body.password,
+            uid: result.uid
+        };  // credentails im cookie speichern
 
         res.redirect("home");  
     }else{
@@ -47,8 +49,14 @@ const registerUser = async (req, res) => {
     }else if(Object.keys(result).length != 0){
         res.render("register",{error: "Der Benutzername ist bereits vergeben!"});   
     }else{
-        setUser(req.body.username, req.body.password);
-        req.session.user = { username: req.body.username , password : req.body.password};  // credentails im cookie speichern
+        await setUser(req.body.username, req.body.password);
+        const user = await getUser(req.body.username);
+        
+        req.session.user = { 
+            username: req.body.username, 
+            password : req.body.password,
+            uid: user.uid
+        };  // credentails im cookie speichern
         res.redirect("register/success");
     }
  
