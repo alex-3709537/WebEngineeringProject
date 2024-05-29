@@ -5,6 +5,17 @@ const util = require("util");
 async function getUser(username) {
     try {
         const result = await connectAndQuery(`SELECT * FROM users WHERE username LIKE '${username}'`);
+
+        return (result.length == 0) ? {} : result[0];
+    } catch (err) {
+        console.error(err.message);
+        return err;
+    }
+}
+
+async function getUserPostCount(uid) {
+    try {
+        const result = await connectAndQuery(`SELECT COUNT(*) FROM post WHERE uid LIKE '${uid}'`);
        
         return (result.length == 0) ? {} : result[0];
     } catch (err) {
@@ -67,5 +78,6 @@ async function connectAndQuery(query) {
 module.exports = {
     getUser,
     setUser,
-    setPost
+    setPost,
+    getUserPostCount
 }

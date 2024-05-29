@@ -23,7 +23,10 @@ function createPost(){
         fetch(url, {
             method: 'POST', 
             headers: {
-              'Content-Type': 'application/json' // Die Art des Inhalts, der gesendet wird
+              'Content-Type': 'application/json', // Die Art des Inhalts, der gesendet wird
+              'Sec-Fetch-Dest': 'empty',
+              'Sec-Fetch-Mode': 'cors',
+              'Sec-Fetch-Site': 'cross-site',
             },
             body: JSON.stringify(data) // Die Daten im JSON-Format
           })

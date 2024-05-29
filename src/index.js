@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 
 const app = express();
 const port = 8080;
@@ -13,6 +14,7 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const { checkSignedIn } = require("./controller/loginController");
 const { pageNotFound } = require("./controller/errorController");
+const { startRefreshLoop } = require("./controller/refreshController");
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'view'));
@@ -27,9 +29,23 @@ app.use(session({
     },
     resave: false
 })); // Hier wird cookie gesetzt
+
+const corsOptions = {
+    origin: ['http://localhost:' + port, 'http://127.0.0.1:' + port],
+    optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
+
+app.options('/blog/post/:postType', cors()) // enable pre-flight request for POST request
+app.post('/blog/post/:postType', cors(), function (req, res, next) {
+  res.json({msg: "post"})
+})
+
 // support req objects
 app.use(express.json());       // to support JSON-encoded bodies
 app.use(express.urlencoded({ extended : true })); // to support URL-encoded bodies
+
 
 
 app.use("/blog", login);
