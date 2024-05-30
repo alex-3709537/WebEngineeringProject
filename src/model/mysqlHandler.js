@@ -13,7 +13,7 @@ async function getUser(username) {
     }
 }
 
-async function getUserPostCount(uid) {
+async function getPostCountForUID(uid) {
     try {
         const result = await connectAndQuery(`SELECT COUNT(*) FROM post WHERE uid LIKE '${uid}'`);
        
@@ -79,5 +79,5 @@ module.exports = {
     getUser,
     setUser,
     setPost,
-    getUserPostCount
+    getPostCountForUID,
 }

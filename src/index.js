@@ -7,13 +7,16 @@ const login = require("./routes/login");
 const user = require("./routes/user");
 const index = require("./routes/index");
 const post = require("./routes/post");
+const autoFetch = require("./routes/autoFetch");
+
 
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const { checkSignedIn } = require("./controller/loginController");
 const { pageNotFound } = require("./controller/errorController");
-const { startRefreshLoop } = require("./controller/refreshController");
+
+
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'view'));
@@ -37,9 +40,12 @@ app.use(express.urlencoded({ extended : true })); // to support URL-encoded bodi
 app.use("/blog", login);
 app.use("/blog/user", checkSignedIn, user);
 app.use("/blog/home", checkSignedIn, index);
-app.use("/blog/post", checkSignedIn ,post);
+app.use("/blog/post", checkSignedIn, post);
+app.use("/blog/autoFetch", checkSignedIn, autoFetch);
+
 
 app.use(pageNotFound);
+
 
 
 
