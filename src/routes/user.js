@@ -2,13 +2,14 @@ const express = require("express");
 const router = express.Router();
 
 const { 
-    profileView
+    profileView,
+    userInfo
 
 } = require("../controller/userController");
 
 
 router.get("/profile",  profileView);
 
-
+router.get("/", userInfo);
 
 module.exports =  router;

@@ -1,56 +1,25 @@
 
 //const {servername} = require("../../config/server");  npm install -g browserify verwenden damit das funktioniert
 import { getPostContainer } from "./builder.js";
+import { getUserInfo, setPost } from "./api.js";
 
 
-const servername = "localhost:8080";
-
-document.getElementById("post-text-button").addEventListener("click", createPost);
+document.getElementById("post-text-button").addEventListener("click", uploadPost);
 document.getElementById("post-text-field").addEventListener("keydown", checkInputField)
 
-function createPost(){
-    const textField = document.getElementById("post-text-field");
-    const post = textField.value;
-    
-    if(post == ""){
-        // show messsage
-    }else{
-        const url = `http://${servername}/blog/post/text`;
+async function uploadPost(){
+  const textField = document.getElementById("post-text-field");
+  const post = textField.value;
 
-        const data = {
-            post : post
-        };
-        fetch(url, {
-            method: 'POST', 
-            headers: {
-              'Content-Type': 'application/json', // Die Art des Inhalts, der gesendet wird
-              'Sec-Fetch-Dest': 'empty',
-              'Sec-Fetch-Mode': 'cors',
-              'Sec-Fetch-Site': 'cross-site',
-            },
-            body: JSON.stringify(data) // Die Daten im JSON-Format
-          })
-          .then(response => {
-            if (!response.ok) {
-              // Wenn die Antwort keinen erfolgreichen Statuscode hat, werfen wir einen Fehler
-              throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json(); // Die Antwort in ein JSON-Objekt umwandeln
-          })
-          .then(data => {
-            console.log('Result:', data); // Erfolgreiche Antwort verarbeiten
+  const result = await setPost(post);
+  const userInfo = await getUserInfo();
 
-            const article = (data.message == "error") ? document.createElement("p").innerHTML = "Something went wrong :/ ..." : getPostContainer("User", post);
+  console.log(result);
+  
+  const article = (result.message == "error") ? document.createElement("p").innerHTML = "Something went wrong :/ ..." : getPostContainer(userInfo.username, post);
             
-            document.getElementById("post-field").append(article);
-          })
-          .catch(error => {
-            console.error('There was a problem with your fetch operation:', error); // Fehlerbehandlung
-          });
-
-          textField.value = "";
-
-    }
+  document.getElementById("post-field").append(article);
+  textField.value = "";
 }
 
 function checkInputField(event){
