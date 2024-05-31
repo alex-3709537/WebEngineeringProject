@@ -62,7 +62,14 @@ export const getUserInfo = async () => {
 }
 
 export const getUserPostCount = async (uid) => {
-   const result = await sendReq("POST", "/blog/autoFetch/", uid);
+   const result = await sendReq("POST", "/blog/getUserPostCount/", uid);
     return result;
 }
+
+export const getUserPosts = async (uid, postCount) => 
+    {
+        const reqBody = { uid: uid, maxAmountOfReturnedPosts: postCount };
+    const result = await sendReq("POST", "/blog/getUserPosts/", reqBody);
+     return result;
+ }
 

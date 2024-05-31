@@ -3,20 +3,26 @@ const {
 } = require("../model/mysqlHandler");
 
 
-const fetchPostCountForUID = async (req, res, next) =>{
-    console.log(req.body.post);
+const fetchPostCountForUID = async (req, res) =>{
 
     const result = await getPostCountForUID(req.session.user.uid);
-    console.log(result[0]);
-  
+
     if(result == "err"){
-        res.json({ message : "error"});
+        res.json({ uid: req.session.user.uid, state: "error", count: 0});
     }else{
-        res.json({ message : "send"});
+        res.json({ uid: req.session.user.uid, state: "success", count: result});
     }
-    next();
+}
+
+const fetchPostsForUID = async (req, res) =>{
+
+    console.log("fetchPostForUID called");
+    console.log(req.body);
+
+    
 }
 
 module.exports = {
-    fetchPostCountForUID
+    fetchPostCountForUID,
+    fetchPostsForUID
 }

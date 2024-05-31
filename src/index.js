@@ -41,7 +41,9 @@ app.use("/blog", login);
 app.use("/blog/user", checkSignedIn, user);
 app.use("/blog/home", checkSignedIn, index);
 app.use("/blog/post", checkSignedIn, post);
-app.use("/blog/autoFetch", checkSignedIn, autoFetch);
+app.use("/blog/", checkSignedIn, autoFetch);
+
+
 
 
 app.use(pageNotFound);

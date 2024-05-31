@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-const { fetchPostCountForUID } = require("../controller/autoFetchController");
+const { fetchPostCountForUID, fetchPostsForUID } = require("../controller/autoFetchController");
 
-router.post("/autoFetch", fetchPostCountForUID);
+router.post("/getUserPostCount", fetchPostCountForUID);
+router.post("/getUserPosts", fetchPostsForUID);
+
 
 module.exports = router;
