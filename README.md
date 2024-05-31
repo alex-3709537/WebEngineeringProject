@@ -62,7 +62,8 @@ GIT
  - [ ] Datenbank Struktur überlegen (Grob) 
  - [ ] Überblick über Projektmanagement Aufgabe verschaffen
 
- - [ ] Erste Text Posts schreiben (Alex)
+ - [x] Erste Text Posts schreiben (Alex)
+ - [ ] Bilder und Videos hochladen (Alex)
  - [ ] Feed immer im Hintergrund aktualisieren und neue Posts suchen (Lukas)
  - [ ] Freunde adden und Freundesliste anzeigen (Sebastian)
 
