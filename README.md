@@ -33,8 +33,6 @@
 5. install mysql
 	`npm install mysql`
 
-6. install cors
-	`npm install cors`
 
 ## Dokumentation
 
