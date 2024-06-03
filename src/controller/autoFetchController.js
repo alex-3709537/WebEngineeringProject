@@ -1,7 +1,7 @@
 const {
-    getPostCountForUID
+    getPostCountForUID,
+    getPostsForUID
 } = require("../model/mysqlHandler");
-
 
 const fetchPostCountForUID = async (req, res) =>{
 
@@ -16,10 +16,8 @@ const fetchPostCountForUID = async (req, res) =>{
 
 const fetchPostsForUID = async (req, res) =>{
 
-    console.log("fetchPostForUID called");
-    console.log(req.body);
-
-    
+    const result = await getPostsForUID(req.session.user.uid, 20);
+    res.json(JSON.stringify(result));
 }
 
 module.exports = {

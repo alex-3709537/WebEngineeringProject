@@ -13,6 +13,17 @@ async function getUser(username) {
     }
 }
 
+async function getUserByUID(uid) {
+    try {
+        const result = await connectAndQuery(`SELECT * FROM users WHERE uid LIKE ${uid}`);
+         
+        return result[0];
+    } catch (err) {
+        console.error(err.message);
+        return err;
+    }
+}
+
 //result[0] ein object mit Parameter "COUNT(*)", was mit js nicht direkt abgegriffen werden kann wegen den Sonderzeichen;
 //daher JSON.stringify(result) als workaround.
 //Hinweis: .indexof(":") ist hier sicher, da das resultString-Objekt immer nach folgendem schema aufgebaut ist:
@@ -31,10 +42,11 @@ async function getPostCountForUID(uid) {
     }
 }
 
-//implementation folgt
-async function getPostsForUID(uid) {
+async function getPostsForUID(uid, maxAmountOfReturnedPosts) {
     try {
-        return "placeholder value"
+        const result = await connectAndQuery(`SELECT * FROM post WHERE uid LIKE '${uid}' ORDER BY date ASC LIMIT ${maxAmountOfReturnedPosts}`);
+        
+        return result;
     } catch (err) {
         console.error(err.message);
         return err;
@@ -94,8 +106,9 @@ async function connectAndQuery(query) {
 
 module.exports = {
     getUser,
+    getUserByUID,
     setUser,
     setPost,
     getPostCountForUID,
-    getPostsForUID
+    getPostsForUID,
 }

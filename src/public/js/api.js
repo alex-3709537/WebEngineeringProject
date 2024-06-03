@@ -61,6 +61,11 @@ export const getUserInfo = async () => {
     return result;
 }
 
+export const getUserByUID = async (uid) => {
+    const result = await sendReq("POST", "/blog/user/", uid);
+    return result;
+}
+
 export const getUserPostCount = async (uid) => {
    const result = await sendReq("POST", "/blog/getUserPostCount/", uid);
     return result;
