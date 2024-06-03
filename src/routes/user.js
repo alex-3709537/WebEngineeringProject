@@ -3,7 +3,8 @@ const router = express.Router();
 
 const { 
     profileView,
-    userInfo
+    userInfo,
+    userInfoByUID
 
 } = require("../controller/userController");
 
@@ -11,5 +12,7 @@ const {
 router.get("/profile",  profileView);
 
 router.get("/", userInfo);
+router.post("/", userInfoByUID);
+
 
 module.exports =  router;
