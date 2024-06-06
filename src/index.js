@@ -43,7 +43,6 @@ app.use("/blog/post", checkSignedIn ,post);
 
 app.use(pageNotFound);
 
-test();
 
 app.listen(port, () => {
     console.log("app listen on port", port);

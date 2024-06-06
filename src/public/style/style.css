@@ -57,6 +57,7 @@ footer {
     display:flexbox;
     border:3px solid grey;
     width: 40%;
+    margin: 10px;
 }
 
 .flex-container-post-header {

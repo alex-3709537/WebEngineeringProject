@@ -1,13 +1,12 @@
-
-
 const servername = "localhost:8080";
 
 /**
+ * Einfache http Methode, die get oder post requests ausführen kann
  * 
  * @param {String} method http methode 
  * @param {String} path api pfad (/blog/...)
  * @param {String} input wenn post methode input für body
- * @returns 
+ * @returns json objekt
  */
 export const sendReq = async (method, path, data = {}) => {
     const url = `http://${servername}${path}`;
@@ -40,6 +39,15 @@ export const sendReq = async (method, path, data = {}) => {
     }
 }
 
+
+/**
+ * Methode kann verwendet werden um ejs elemente von Server zu fetchen. Bis jetzt aber nicht verwendet.
+ * 
+ * @param {string} path 
+ * @param {object} data objekt in dem Parameter für die query enthalten sind. Serverseitig können die parameter mit req.query.beliebigerName
+ *                      aufgerufen werden 
+ * @returns gibt ein html Formular zurück
+ */
 const fetchView = async (path, data = {}) => {
     const url = new URL(`http://${servername}${path}`);
 
@@ -73,6 +81,13 @@ const fetchView = async (path, data = {}) => {
     }
 }
 
+/**
+ * Methode wird verwendet um formData Objekte an dem Server zu senden. (Der Inhalt kommt aus dem Feldern im HTML <from> )
+ * 
+ * @param {*} path 
+ * @param {*} formData 
+ * @returns 
+ */
 const mpfd = async (path, formData) => {
     const url = `http://${servername}${path}`;
 
@@ -96,6 +111,15 @@ const mpfd = async (path, formData) => {
     }
 }
 
+
+/**
+ * Methode kann genutzt werden um einzelne Bild Dateien von der vom Server zu fetchen. Kann ggf. verwendet werden, z.B. 
+ * beim Fetchen von Profilbilder o.ä.
+ * 
+ * @param {string} path 
+ * @param {object} data 
+ * @returns 
+ */
 const getBlob = async (path, data) => {
     const url = new URL(`http://${servername}${path}`);
 
@@ -130,18 +154,7 @@ const getBlob = async (path, data) => {
 }
 
 
-/**
- * 
- * @param  post  Inhalt vom Post
- * @returns 
- */
-export const setTextPost = async (post) => {
-    const data = {
-        post: post
-    };
-    const result = await sendReq("POST", "/blog/post/text", data);
-    return result;
-}
+
 
 /**
  * 
@@ -162,34 +175,24 @@ export const getPostContainer = async (username, input) => {
     return result;
 }
 
-export const setFilePost = async (file) => {
-    const formData = new FormData();
-    formData.append("file", file);
-
-    const result = await mpfd("/blog/post/file", formData);
-    return result;
-}
-
-export const getPostFile = async (fid) => {
-    const result = await getBlob("/blog/post/file", { fid: fid });
-    const img = document.createElement("img");
-
-    img.src = URL.createObjectURL(result);
-
-    return img;
-}
-
-export const getPost = async (pid) => {
-    const result = await sendReq("GET", "/blog/post/text");
-}
-
-export const setPost = async (formData) => {
-
+/**
+ * Sendet den Post an den Server 
+ * 
+ * @param {} formData 
+ * @returns 
+ */
+export const setPost = async (form) => {
+    const formData = new FormData(form);
     const result = await mpfd("/blog/post", formData);
-    console.log(result);
+    
     return result;
 }
 
+/**
+ * Fetcht den Post von dem Server (Text und media datein)
+ * @param {*} pid 
+ * @returns Objekt mit html elementen
+ */
 export const getFullPost = async (pid) => {
     const path = "/blog/post"
     const data = {

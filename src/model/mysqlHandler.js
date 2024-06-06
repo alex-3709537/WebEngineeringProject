@@ -4,6 +4,7 @@ const mysql2 = require("mysql2/promise");
 const util = require("util");
 const fs = require("fs/promises");
 const path = require("path");
+
 async function getUser(username) {
     try {
         const result = await connectAndQuery(`SELECT * FROM users WHERE username LIKE '${username}'`);
@@ -65,15 +66,7 @@ async function setFile(filename, pid) {
     }
 }
 
-async function getFile(fid){
-    try{
-        const result = await connectAndQuery2(`SELECT data from files WHERE fid = ?`, [fid]);
-        return result[0];
-    } catch (err) {
-        console.error(err.message);
-        return "err";
-    }
-}
+
 
 async function getPost(pid){
     try {
@@ -138,6 +131,5 @@ module.exports = {
     setPost,
     getUserPostCount,
     setFile,
-    getFile,
     getPost
 }

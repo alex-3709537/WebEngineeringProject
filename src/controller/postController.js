@@ -1,48 +1,9 @@
 const {
     setPost,
     setFile,
-    getFile,
     getPost
 } = require("../model/mysqlHandler");
 
-
-
-const uploadPost = async (req, res, next) => {
-    console.log(req.body.post);
-
-    const result = await setPost(req.session.user.uid, req.body.post);
-
-    if (result == "err") {
-        res.json({ message: "error" });
-    } else {
-        res.json({ message: "send" });
-    }
-
-}
-
-const postContainerView = (req, res) => {
-    res.render("postContainer", { username: req.query.username, post: req.query.post });
-}
-
-const uploadFile = (req, res) => {
-    if (req.file) {
-        console.log(req.file.filename);
-        setFile(req.file.filename);
-        res.json({ message: 'Datei erfolgreich hochgeladen', filename: req.file.filename });
-    } else {
-        res.status(400).json({ error: 'Keine Datei hochgeladen' });
-    }
-}
-
-const getPostFile = async (req, res) => {
-    const result = await getFile(req.query.fid);
-
-    const img = result.data;
-
-    res.setHeader('Content-Type', 'image/jpeg');
-    res.send(img);
-
-}
 
 
 const getFullPost = async (req, res) => {
@@ -87,10 +48,10 @@ const createPost = async (req, res) => {
     
 
     if (image != undefined) {
-        console.log("Bild gesendet");
+        console.log("Datei gesendet");
         const result2 = await setFile(req.file.filename, result.insertId);
     } else {
-        console.log("kein Bild gesendet");
+        console.log("Keine Datei gesendet");
     }
 
     res.json({ 
@@ -109,10 +70,6 @@ function arrayBufferToBase64(buffer) {
     return btoa(binary);
 }
 module.exports = {
-    uploadPost,
-    postContainerView,
-    uploadFile,
-    getPostFile,
     createPost,
     getFullPost
 }
