@@ -1,32 +1,24 @@
 
-//const {servername} = require("../../config/server");  npm install -g browserify verwenden damit das funktioniert
-import { getPostContainer } from "./builder.js";
-import { getUserInfo, setPost } from "./api.js";
+import { getPostContainer2 } from "./builder.js";
+import { getUserInfo, setPost, getFullPost} from "./api.js";
 
 
-document.getElementById("post-text-button").addEventListener("click", uploadPost);
-document.getElementById("post-text-field").addEventListener("keydown", checkInputField)
+const postField = document.getElementById("post-text-field");
 
-async function uploadPost(){
-  const textField = document.getElementById("post-text-field");
-  const post = textField.value;
 
-  const result = await setPost(post);
-  const userInfo = await getUserInfo();
+document.getElementById("post-form").addEventListener("submit", async function(event) {
+  event.preventDefault(); // Verhindert das Standardverhalten (Seiten-Reload);
+  const form = event.target;
+  const formData = new FormData(form);
 
-  console.log(result);
+  const result = await setPost(formData);
+
+  postField.value = "";
+  document.getElementById("file-input").value = "";
+
+  const post = await getFullPost(result.pid);
+  const div = getPostContainer2(result.username, post);
+  document.getElementById("post-field").append(div);
   
-  const article = (result.message == "error") ? document.createElement("p").innerHTML = "Something went wrong :/ ..." : getPostContainer(userInfo.username, post);
-            
-  document.getElementById("post-field").append(article);
-  textField.value = "";
-}
-
-function checkInputField(event){
-    const button = document.getElementById("post-text-button");
-    if (event.key === 'Enter') {
-        event.preventDefault(); // Verhindert das Standardverhalten des Formulars
-        button.click(); // Trigger den Klick-Event des Buttons
-      }
-}
+});
 

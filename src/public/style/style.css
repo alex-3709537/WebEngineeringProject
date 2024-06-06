@@ -52,14 +52,16 @@ footer {
     margin:10px;
 }
 
-.post-container-article{
+.flex-container-post{
     padding: 10px;
-    display:block;
+    display:flexbox;
     border:3px solid grey;
     width: 40%;
 }
 
-h2 {
+.flex-container-post-header {
     font-size:20px;
+    color: purple;
+    font-weight: bold;
     
 }

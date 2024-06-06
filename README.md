@@ -33,6 +33,11 @@
 5. install mysql
 	`npm install mysql`
 
+6. install multer for handling multipart/form-data
+	`npm install multer`
+7. install mysql2 
+	`npm install mysql2`
+
 
 ## Dokumentation
 

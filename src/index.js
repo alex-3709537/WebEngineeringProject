@@ -8,6 +8,8 @@ const user = require("./routes/user");
 const index = require("./routes/index");
 const post = require("./routes/post");
 
+const {test} = require("./test.js");
+
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
@@ -41,8 +43,10 @@ app.use("/blog/post", checkSignedIn ,post);
 
 app.use(pageNotFound);
 
-
+test();
 
 app.listen(port, () => {
     console.log("app listen on port", port);
 })
+
+

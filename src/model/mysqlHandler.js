@@ -1,7 +1,9 @@
 const sqlConfig = require("../config/databaseMySql");
 const mysql = require("mysql");
+const mysql2 = require("mysql2/promise");
 const util = require("util");
-
+const fs = require("fs/promises");
+const path = require("path");
 async function getUser(username) {
     try {
         const result = await connectAndQuery(`SELECT * FROM users WHERE username LIKE '${username}'`);
@@ -16,7 +18,7 @@ async function getUser(username) {
 async function getUserPostCount(uid) {
     try {
         const result = await connectAndQuery(`SELECT COUNT(*) FROM post WHERE uid LIKE '${uid}'`);
-       
+
         return (result.length == 0) ? {} : result[0];
     } catch (err) {
         console.error(err.message);
@@ -28,7 +30,7 @@ async function getUserPostCount(uid) {
 async function setUser(username, password) {
     try {
         const result = await connectAndQuery(`INSERT INTO users (username, password, creationDate) VALUES('${username}','${password}', CURRENT_TIMESTAMP)`);
-       
+
         return result;
     } catch (err) {
         console.error(err.message);
@@ -40,7 +42,7 @@ async function setUser(username, password) {
 async function setPost(uid, post) {
     try {
         const result = await connectAndQuery(`INSERT INTO post (uid, post, date) VALUES(${uid},'${post}', CURRENT_TIMESTAMP)`);
-        
+
         return result;
     } catch (err) {
         console.error(err.message);
@@ -48,7 +50,46 @@ async function setPost(uid, post) {
     }
 }
 
+async function setFile(filename, pid) {
+    try {
+        filePath = `src/resources/${filename}`;
+        // Datei lesen
+        const data = await fs.readFile(filePath);
+        const type = path.extname(filename);
+        const result = await connectAndQuery2(`INSERT INTO files (name, type, data, pid) VALUES(?, ?, ?, ?)`, [filename, type, data, pid]);
 
+        return result;
+    } catch (err) {
+        console.error(err.message);
+        return "err";
+    }
+}
+
+async function getFile(fid){
+    try{
+        const result = await connectAndQuery2(`SELECT data from files WHERE fid = ?`, [fid]);
+        return result[0];
+    } catch (err) {
+        console.error(err.message);
+        return "err";
+    }
+}
+
+async function getPost(pid){
+    try {
+        const result = await connectAndQuery2(`
+            SELECT post.*, files.*
+            FROM post
+            LEFT JOIN files ON post.pid = files.pid
+            WHERE post.pid = ?`, 
+            [pid]);
+
+        return result[0];
+    } catch (error) {
+        console.error(err.message);
+        return "err";
+    }
+}
 
 
 async function connectAndQuery(query) {
@@ -57,13 +98,13 @@ async function connectAndQuery(query) {
         con = mysql.createConnection(sqlConfig);
         const connect = util.promisify(con.connect).bind(con);  // baut die funktion in eine promise funktion um
         const queryPromise = util.promisify(con.query).bind(con);
-        
+
         await connect();
         console.log("Connection to Database successfull");
 
         const result = await queryPromise(query);
         console.log("Sql Query executed successfully!");
-        
+
         return result;
     } catch (err) {
         console.error(err.message);
@@ -75,9 +116,28 @@ async function connectAndQuery(query) {
     }
 }
 
+async function connectAndQuery2(query, data) {
+    const connection = await mysql2.createConnection(sqlConfig);
+
+    try {
+            
+        const [results] = await connection.execute(query, data);
+        
+        return results;
+    } catch (err) {
+        console.error('Fehler:', err);
+    } finally {
+        // Verbindung schließen
+        await connection.end();
+    }
+}
+
 module.exports = {
     getUser,
     setUser,
     setPost,
-    getUserPostCount
+    getUserPostCount,
+    setFile,
+    getFile,
+    getPost
 }
