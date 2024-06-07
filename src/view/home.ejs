@@ -21,8 +21,15 @@
     <main id="post-field">
         <p>Write a message!</p>
     </main>
-    <div id="text-post-field-button-container">
-    <input type="text" id="post-text-field"><button id="post-text-button">Send</button><input type="file" id="post-media-field">
+
+    <form id="post-form" method="post">
+        <div id="text-post-field-button-container">
+            <div id="text-post-field-info"></div>
+        <input type="text" id="post-text-field" name="text_input">
+        <input id="post-text-button" type="submit" value="send" name="upload_button">
+        <input type="file" id="file-input" name="file_input">
+    <form>
+
     </div>
     <div id="friends-list-add-friends-container">
         <label for="friends">add friends:</label>

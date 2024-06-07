@@ -9,6 +9,7 @@ const index = require("./routes/index");
 const post = require("./routes/post");
 const autoFetch = require("./routes/autoFetch");
 
+const {test} = require("./test.js");
 
 const path = require("path");
 const cookieParser = require("cookie-parser");
@@ -49,8 +50,8 @@ app.use("/blog/", checkSignedIn, autoFetch);
 app.use(pageNotFound);
 
 
-
-
 app.listen(port, () => {
     console.log("app listen on port", port);
 })
+
+

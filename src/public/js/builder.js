@@ -1,16 +1,24 @@
-export function getPostContainer(username, postText){
-    const article = document.createElement("article");
-    const h2 = document.createElement("h2");
-    const p = document.createElement("p");
+export function getPostContainer2(username, post) {
+    const divMain = document.createElement("div");
+    const divUsername = document.createElement("div");
+    const divMedia = document.createElement("div");
+    const divText = document.createElement("div");
 
-    article.setAttribute("class", "post-container-article");
-    h2.setAttribute("class", "post-container-username");
-    p.setAttribute("id", "post-container-text");
+    divMain.setAttribute("class", "flex-container-post");
+    divUsername.setAttribute("class","flex-container-post-header");
+    divText.setAttribute("class", "flex-cantainer-post-input");
 
-    h2.innerHTML = username;
-    p.innerHTML = postText;
-    article.append(h2);
-    article.append(p);
+    divUsername.innerHTML = username;
+    divMain.appendChild(divUsername);
 
-    return article;
+    if(post.media != undefined){
+        divMedia.appendChild(post.media);
+        divMain.appendChild(divMedia);
+        console.log(post.media);
+    }
+
+    divText.appendChild(post.text);
+    divMain.appendChild(divText);
+
+    return divMain;
 }
