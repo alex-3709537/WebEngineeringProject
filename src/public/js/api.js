@@ -9,8 +9,9 @@ const servername = "localhost:8080";
  * @returns json objekt
  */
 export const sendReq = async (method, path, data = {}) => {
-    const url = `http://${servername}${path}`;
+    const url = new URL(`http://${servername}${path}`);
 
+   
     const metaInfo = {
         method: method,
         headers: {
@@ -22,6 +23,10 @@ export const sendReq = async (method, path, data = {}) => {
     }
     if (method == "POST") {
         metaInfo.body = JSON.stringify(data);
+    }else if(method == "GET"){
+        Object.keys(data).forEach(function (key, index) {
+            url.searchParams.append(key, data[key]);
+        });
     }
 
     try {
@@ -166,7 +171,7 @@ export const getUserInfo = async () => {
 }
 
 export const getUserByUID = async (uid) => {
-    const result = await sendReq("POST", "/blog/user/", uid);
+    const result = await sendReq("GET", "/blog/user/uid", {uid:uid});
     return result;
 }
 export const getPostContainer = async (username, input) => {
@@ -175,21 +180,18 @@ export const getPostContainer = async (username, input) => {
         post: input
     }
     const result = await fetchView("/blog/post/view", data);
-
+}
 export const getUserPostCount = async (uid) => {
-   const result = await sendReq("POST", "/blog/getUserPostCount/", uid);
+   const result = await sendReq("GET", "/blog/getUserPostCount/", uid);
     return result;
 }
 
-export const getUserPosts = async (uid, postCount) => 
-    {
-        const reqBody = { uid: uid, maxAmountOfReturnedPosts: postCount };
-    const result = await sendReq("POST", "/blog/getUserPosts/", reqBody);
-     return result;
- }
-
-
+export const getUserPosts = async (uid, postCount) => {
+    const reqBody = { uid: uid, maxAmountOfReturnedPosts: postCount };
+    const result = await sendReq("GET", "/blog/getUserPosts/", reqBody);
     return result;
+
+
 }
 
 /**

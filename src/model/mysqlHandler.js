@@ -47,7 +47,7 @@ async function getPostCountForUID(uid) {
 
 async function getPostsForUID(uid, maxAmountOfReturnedPosts) {
     try {
-        const result = await connectAndQuery(`SELECT * FROM post WHERE uid LIKE '${uid}' ORDER BY date ASC LIMIT ${maxAmountOfReturnedPosts}`);
+        const result = await connectAndQuery(`SELECT * FROM post WHERE uid LIKE '${uid}' ORDER BY date DESC LIMIT ${maxAmountOfReturnedPosts}`);
         
         return result;
     } catch (err) {
@@ -97,7 +97,7 @@ async function setFile(filename, pid) {
 
 
 
-async function getPost(pid){
+async function getPostByPid(pid){
     try {
         const result = await connectAndQuery2(`
             SELECT post.*, files.*
@@ -107,6 +107,22 @@ async function getPost(pid){
             [pid]);
 
         return result[0];
+    } catch (err) {
+        console.error(err.message);
+        return "err";
+    }
+}
+async function getPostByUid(uid, limit){
+    try {
+        const result = await connectAndQuery2(`
+            SELECT TOP ? post.*, files.*
+            FROM post
+            LEFT JOIN files ON post.pid = files.pid
+            WHERE post.uid = ?
+            ORDER BY date`, 
+            [limit, uid]);
+
+        return result;
     } catch (error) {
         console.error(err.message);
         return "err";
@@ -161,4 +177,7 @@ module.exports = {
     setPost,
     getPostCountForUID,
     getPostsForUID,
+    setFile,
+    getPostByPid,
+    getPostByUid
 }

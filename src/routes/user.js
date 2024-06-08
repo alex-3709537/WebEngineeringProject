@@ -12,7 +12,7 @@ const {
 router.get("/profile",  profileView);
 
 router.get("/", userInfo);
-router.post("/", userInfoByUID);
+router.get("/uid", userInfoByUID);
 
 
 module.exports =  router;

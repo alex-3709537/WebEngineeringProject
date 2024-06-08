@@ -12,7 +12,7 @@ const userInfo = (req, res) => {
 }
 
 const userInfoByUID = async (req, res) => {
-    const result = await getUserByUID(req.body.post);
+    const result = await getUserByUID(req.query.uid);
     res.json({username: result.username, uid: result.uid});
 }
 

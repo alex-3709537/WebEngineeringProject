@@ -1,5 +1,5 @@
 
-import { getPostContainer2 } from "./builder.js";
+import { getPostContainer } from "./builder.js";
 import { getUserInfo, setPost, getFullPost} from "./api.js";
 
 
@@ -15,9 +15,9 @@ document.getElementById("post-form").addEventListener("submit", async function(e
 
   postField.value = "";
   document.getElementById("file-input").value = "";
-
+  
   const post = await getFullPost(result.pid);
-  const div = getPostContainer2(result.username, post);
+  const div = getPostContainer(result.username, post);
   document.getElementById("post-field").append(div);
   
 });

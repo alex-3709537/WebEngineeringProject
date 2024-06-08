@@ -16,7 +16,7 @@ const fetchPostCountForUID = async (req, res) =>{
 
 const fetchPostsForUID = async (req, res) =>{
 
-    const result = await getPostsForUID(req.session.user.uid, 20);
+    const result = await getPostsForUID(req.session.user.uid, req.query.maxAmountOfReturnedPosts);
     res.json(JSON.stringify(result));
 }
 

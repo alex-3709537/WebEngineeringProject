@@ -1,4 +1,4 @@
-import { getUserByUID, getUserInfo, getUserPostCount, getUserPosts } from "./api.js";
+import { getUserByUID, getUserInfo, getUserPostCount, getUserPosts, getFullPost } from "./api.js";
 import { getPostContainer } from "./builder.js";
 
 
@@ -21,8 +21,21 @@ window.onload = async function()
 async function buildPostTimeline(currentUser)
 {
     //maximal 20 posts eines Users laden
-    const posts = await getUserPosts(currentUser.uid, 20);
-    const postObj = JSON.parse(posts);
+    const posts = await getUserPosts(currentUser.uid, 4);
+    let postObj = JSON.parse(posts);
+
+    /***** AB HIER ÄNDERUNG VON ALEX ******************* */
+    /// MÖGLICHE ALTERNATIVE
+        
+        const postArr= [];
+
+        for(let i = postObj.length - 1; i >= 0; i--){
+            let post = await getFullPost(postObj[i].pid);
+            postArr.push(post);
+        }
+
+    /***** ENDE ***********************************************/
+
     console.log(postObj);
 
 
@@ -32,7 +45,7 @@ async function buildPostTimeline(currentUser)
 
 
     //zurückgegebene Anzahl an Posts in HTML Container packen und anzeigen
-    for (var i = 0; i < postObj.length; ++i)
+    for (var i = 0; i < postObj.length; ++i)    
     {
         //versuchen, username aus cache zu holen
         var userName;
@@ -52,7 +65,8 @@ async function buildPostTimeline(currentUser)
         }
     //    console.log("KnownUserNameCount: " + knownUserNames.length);
 
-        const article = getPostContainer(userName, postObj[i].post);
+        //const article = getPostContainer(userName, postObj[i].post);
+        const article = getPostContainer(userName, postArr[i]);     // <--- postArr[] statt postObj[]
         console.log(postObj[i]);
         document.getElementById("post-field").append(article);
     }

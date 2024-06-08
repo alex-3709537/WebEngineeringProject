@@ -1,14 +1,14 @@
 const {
     setPost,
     setFile,
-    getPost
+    getPostByPid,
+    getPostByUid
 } = require("../model/mysqlHandler");
 
 
 
 const getFullPost = async (req, res) => {
-    const result = await getPost(req.query.pid);
-
+    const result = await getPostByPid(req.query.pid);
     result.data = arrayBufferToBase64(result.data);
     let contentType = "image/png";
     const boundary = 'boundary12345';
