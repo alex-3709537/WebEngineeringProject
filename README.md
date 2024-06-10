@@ -68,7 +68,8 @@ GIT
  - [ ] Überblick über Projektmanagement Aufgabe verschaffen
 
  - [x] Erste Text Posts schreiben (Alex)
- - [ ] Bilder und Videos hochladen (Alex)
+ - [x] Bilder und Videos hochladen (Alex)
+ - [ ] Datum anzeigen und Likes Funktion hinzufügen (Alex)
  - [ ] Feed immer im Hintergrund aktualisieren und neue Posts suchen (Lukas)
  - [ ] Freunde adden und Freundesliste anzeigen (Sebastian)
 
