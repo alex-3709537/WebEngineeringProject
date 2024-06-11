@@ -11,7 +11,7 @@ const {
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'src/resources/'); // Speicherort für die hochgeladenen Dateien
+        cb(null, path.join(__dirname + "/../resources")); // Speicherort für die hochgeladenen Dateien
     },
     filename: function (req, file, cb) {
         cb(null, Date.now() + path.extname(file.originalname)); // Benennt die Datei um
