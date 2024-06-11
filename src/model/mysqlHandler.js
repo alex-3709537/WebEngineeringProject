@@ -82,7 +82,7 @@ async function setPost(uid, post) {
 
 async function setFile(filename, pid) {
     try {
-        filePath = `src/resources/${filename}`;
+        filePath = `${path.join(__dirname + "/../resources/")}${filename}`;
         // Datei lesen
         const data = await fs.readFile(filePath);
         const type = path.extname(filename);
