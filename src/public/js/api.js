@@ -213,45 +213,49 @@ export const setPost = async (form) => {
  * @returns Objekt mit html elementen
  */
 export const getFullPost = async (pid) => {
-    const path = "/blog/post"
+    const path = "/blog/post";
     const data = {
         pid: pid
     };
 
     const url = new URL(`http://${servername}${path}`);
 
-    Object.keys(data).forEach(function (key, index) {
+    Object.keys(data).forEach((key) => {
         url.searchParams.append(key, data[key]);
     });
+
     const response = await fetch(url);
     
-    let contentType = response.headers.get('Content-Type');
+    const contentType = response.headers.get('Content-Type');
     const boundary = contentType.split('boundary=')[1];
     const text = await response.text();
     const parts = text.split(`--${boundary}`).filter(part => part && part !== '--');
-
+    console.log(text);
     const postElements = {};
 
     parts.forEach(part => {
-        const [header, body] = part.split('\r\n\r\n');
+        const [header, ...bodyParts] = part.split('\r\n\r\n');
+        const body = bodyParts.join('\r\n\r\n').trim();
         
+        const contentDispositionMatch = /Content-Disposition: form-data; name="([^"]+)"(; filename="([^"]+)")?/.exec(header);
         const typeMatch = /Content-Type: (.+)/.exec(header);
-        if (typeMatch) {
-            let contentType = typeMatch[1].trim();
+
+        if (contentDispositionMatch && typeMatch) {
+            const fieldName = contentDispositionMatch[1].trim();
+            const contentType = typeMatch[1].trim();
+            console.log(fieldName +" : "+ body);
             if (contentType.startsWith('text/')) {
-                const textElement = document.createElement('p');
-                textElement.textContent = body.trim();
-                postElements.text = textElement;
+                
+                postElements[fieldName] = body;
             } else if (contentType.startsWith('image/')) {
                 const imageElement = document.createElement('img');
-                imageElement.src = 'data:' + contentType + ';base64,' + body;
-                postElements.img = imageElement;              
-                postElements.media = imageElement;
+                imageElement.src = `data:${contentType};base64,${body}`;
+                postElements[fieldName] = imageElement;
             } else if (contentType.startsWith('video/')) {
                 const videoElement = document.createElement('video');
                 videoElement.controls = true;
-                videoElement.src = 'data:' + contentType + ';base64,' + body;
-                postElements.media = videoElement;
+                videoElement.src = `data:${contentType};base64,${body}`;
+                postElements[fieldName] = videoElement;
             }
         }
     });

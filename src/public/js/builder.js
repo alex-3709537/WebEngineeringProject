@@ -1,7 +1,7 @@
 export function getPostContainer(username, post) {
     try {
-
-
+        console.log("post: ", post);
+        console.log(username)
         if (post == undefined) {
             throw new Error("post undefined")
         }
@@ -9,6 +9,7 @@ export function getPostContainer(username, post) {
         const divUsername = document.createElement("div");
         const divMedia = document.createElement("div");
         const divText = document.createElement("div");
+        const p = document.createElement("p");
 
         divMain.setAttribute("class", "flex-container-post");
         divUsername.setAttribute("class", "flex-container-post-header");
@@ -17,13 +18,13 @@ export function getPostContainer(username, post) {
         divUsername.innerHTML = username;
         divMain.appendChild(divUsername);
 
-        if (post.media != undefined) {
-            divMedia.appendChild(post.media);
+        if (post.data != undefined && post.data != "unknown-Content-Type") {
+            divMedia.appendChild(post.data);
             divMain.appendChild(divMedia);
-            console.log(post.media);
+            
         }
-
-        divText.appendChild(post.text);
+        p.innerHTML = post.post;
+        divText.appendChild(p);
         divMain.appendChild(divText);
 
         return divMain;

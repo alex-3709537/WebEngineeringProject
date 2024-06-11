@@ -6,46 +6,59 @@ const {
 } = require("../model/mysqlHandler");
 
 
-
 const getFullPost = async (req, res) => {
     const result = await getPostByPid(req.query.pid);
-    result.data = arrayBufferToBase64(result.data);
-    let contentType = "image/png";
+
     const boundary = 'boundary12345';
 
     res.writeHead(200, {
-        'Content-Type': `multipart/mixed; boundary=${boundary}`
+        'Content-Type': `multipart/form-data; boundary=${boundary}`
     });
 
-    if(result.type == ".mp4"){
-        contentType = "video/mp4";
-    }
+    result.forEach(element => {
+        for (const fieldName in element) {
+            if (fieldName === "data") {
+                if (element.data != "" && element.data != null) {
+                    element[fieldName] = arrayBufferToBase64(element[fieldName]);
+                    let contentType;
 
-    // Textteil schreiben
-    res.write(`--${boundary}\r\n`);
-    res.write('Content-Type: text/plain\r\n\r\n');
-    res.write(`${(result.post == null)? "" : result.post}\r\n`);
+                    if (element.type === ".mp4") {
+                        contentType = "video/mp4";
+                    } else if (element.type === ".jpg" || element.type === ".jpeg") {
+                        contentType = "image/jpeg";
+                    } else if (element.type === ".png") {
+                        contentType = "image/png";
+                    } else {
+                        contentType = "text/plain";
+                        element[fieldName] = "unknown-Content-Type";
+                    }
 
-    if(result.data != ""){
-        
-        res.write(`--${boundary}\r\n`);
-        res.write(`Content-Type: ${contentType}\r\n`);
-        res.write('Content-Transfer-Encoding: base64\r\n\r\n');
-        res.write(result.data);
-    
-    }
-   
+                    res.write(`--${boundary}\r\n`);
+                    res.write(`Content-Disposition: form-data; name="${fieldName}"; filename="file${element.type}"\r\n`);
+                    res.write(`Content-Type: ${contentType}\r\n`);
+                    res.write('Content-Transfer-Encoding: base64\r\n\r\n');
+                    res.write(`${element[fieldName]}\r\n`);
+                }
+            } else {
+                res.write(`--${boundary}\r\n`);
+                res.write(`Content-Disposition: form-data; name="${fieldName}"\r\n`);
+                res.write('Content-Type: text/plain\r\n\r\n');
+                res.write(`${element[fieldName] == null ? "" : element[fieldName]}\r\n`);
+            }
+        }
+    });
+
     // Abschlussgrenze
-    res.end(`\r\n--${boundary}--`);
+    res.end(`--${boundary}--`);
+};
 
-}
 
 const createPost = async (req, res) => {
     const text = req.body.text_input;
     const image = req.file;
 
     const result = await setPost(req.session.user.uid, text);
-    
+
 
     if (image != undefined) {
         console.log("Datei gesendet");
@@ -54,10 +67,10 @@ const createPost = async (req, res) => {
         console.log("Keine Datei gesendet");
     }
 
-    res.json({ 
-        message: "post erfolgreich hochgeladen", 
-        uid: req.session.uid, pid: result.insertId, 
-        username: req.session.user.username 
+    res.json({
+        message: "post erfolgreich hochgeladen",
+        uid: req.session.uid, pid: result.insertId,
+        username: req.session.user.username
     });
 }
 

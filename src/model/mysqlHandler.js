@@ -106,7 +106,7 @@ async function getPostByPid(pid){
             WHERE post.pid = ?`, 
             [pid]);
 
-        return result[0];
+        return result;
     } catch (err) {
         console.error(err.message);
         return "err";
