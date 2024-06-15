@@ -13,6 +13,17 @@ async function getUser(username) {
     }
 }
 
+async function getAllUsernames() {
+    try {
+        const result = await connectAndQuery("SELECT User FROM mysql.user");
+        return result.map(row => row.User);
+    } catch (err) {
+        console.error("Fehler beim Abrufen der Benutzernamen:", err.message);
+        throw err;
+    }
+}
+
+
 async function getUserPostCount(uid) {
     try {
         const result = await connectAndQuery(`SELECT COUNT(*) FROM post WHERE uid LIKE '${uid}'`);
@@ -77,6 +88,7 @@ async function connectAndQuery(query) {
 
 module.exports = {
     getUser,
+    getAllUsernames,
     setUser,
     setPost,
     getUserPostCount
