@@ -186,12 +186,10 @@ export const getUserPostCount = async (uid) => {
     return result;
 }
 
-export const getUserPosts = async (uid, postCount) => {
+export const getUserPostPids = async (uid, postCount) => {
     const reqBody = { uid: uid, maxAmountOfReturnedPosts: postCount };
-    const result = await sendReq("GET", "/blog/getUserPosts/", reqBody);
-    return result;
-
-
+    const pids = await sendReq("GET", "/blog/getUserPosts/", reqBody);
+    return pids;
 }
 
 /**
@@ -207,8 +205,10 @@ export const setPost = async (form) => {
     return result;
 }
 
+
+
 /**
- * Fetcht den Post von dem Server (Text und media datein)
+ * Fetcht den Post von dem Server (Text und media dateien)
  * @param {*} pid 
  * @returns Objekt mit html elementen
  */
@@ -260,5 +260,6 @@ export const getFullPost = async (pid) => {
         }
     });
 
+  //  console.log("post: " + JSON.stringify(postElements));
     return postElements;
 }

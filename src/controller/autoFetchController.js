@@ -1,6 +1,7 @@
 const {
     getPostCountForUID,
-    getPostsForUID
+    getPostsForUID,
+    getPostsByUids
 } = require("../model/mysqlHandler");
 
 const fetchPostCountForUID = async (req, res) =>{
@@ -20,7 +21,16 @@ const fetchPostsForUID = async (req, res) =>{
     res.json(JSON.stringify(result));
 }
 
+const fetchPostsForUIDs = async (req, res) =>{
+
+    console.log("Fetching a maximum of " + req.query.maxAmountOfReturnedPosts + " posts for uid " + req.query.uid);
+    const result = await getPostsByUids(req.query.uid, req.query.maxAmountOfReturnedPosts);
+    res.json(result);
+
+}
+
 module.exports = {
     fetchPostCountForUID,
-    fetchPostsForUID
+    fetchPostsForUID,
+    fetchPostsForUIDs
 }

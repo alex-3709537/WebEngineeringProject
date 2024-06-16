@@ -1,4 +1,4 @@
-import { getUserByUID, getUserInfo, getUserPostCount, getUserPosts, getFullPost } from "./api.js";
+import { getUserByUID, getUserInfo, getUserPostCount, getUserPostPids, getFullPost } from "./api.js";
 import { getPostContainer } from "./builder.js";
 
 
@@ -9,8 +9,8 @@ window.onload = async function()
     const currentUser = await getUserInfo();
     console.log(currentUser);
 
-    //bisherige User-Posts reinladen
-    buildPostTimeline(currentUser);
+    //bisherige User-Posts von allen Usern (-1) reinladen
+    buildPostTimeline(-1, 10);
 
     //automatisches Überprüfen auf neue Posts beginnen
     startAutoFetchRoutine(currentUser.uid);
@@ -18,62 +18,54 @@ window.onload = async function()
 
 
 
-async function buildPostTimeline(currentUser)
+
+var knownUserNames = [];
+
+
+async function fetchLastNPosts(users, maxAmountOfPostsToBeFetched)
 {
-    //maximal 20 posts eines Users laden
-    const posts = await getUserPosts(currentUser.uid, 4);
-    let postObj = JSON.parse(posts);
+    //pids laden
+    const pids = await getUserPostPids(users, maxAmountOfPostsToBeFetched);
 
-    /***** AB HIER ÄNDERUNG VON ALEX ******************* */
-    /// MÖGLICHE ALTERNATIVE
-        
-        const postArr= [];
-
-        for(let i = postObj.length - 1; i >= 0; i--){
-            let post = await getFullPost(postObj[i].pid);
-            postArr.push(post);
-        }
-
-    /***** ENDE ***********************************************/
-
-    console.log(postObj);
-
-
-    //usernames cachen, um nichrt für jeden post den zugehörigen usernamen anfragen zu müssen
-    var knownUserNames = [];
-    console.log("KnownUserNameCount: " + knownUserNames.length);
-
-
-    //zurückgegebene Anzahl an Posts in HTML Container packen und anzeigen
-    for (var i = 0; i < postObj.length; ++i)    
+    for(let i = pids.length - 1; i >= 0; i--)
     {
+        console.log("Fetching post for pid " + pids[i].pid);
+        let post = await getFullPost(pids[i].pid);
+
         //versuchen, username aus cache zu holen
         var userName;
-        const userObj = knownUserNames.find(knownUser => knownUser.uid === postObj[i].uid);
-
+        const userObj = knownUserNames.find(knownUser => knownUser.uid === post.uid);
+    
         if (userObj)
         {
             userName = userObj.username;
         }
         else //username nicht gecached
         {
-            console.log("Requesting username for " + postObj[i].uid + "...");
-            const res = await getUserByUID(postObj[i].uid);
+            console.log("Requesting username for UID #" + post.uid + "...");
+            const res = await getUserByUID(post.uid);
 
             userName = res.username;
-            knownUserNames.push({username: res.username, uid: postObj[i].uid});
+            knownUserNames.push({username: res.username, uid: post.uid});
         }
-    //    console.log("KnownUserNameCount: " + knownUserNames.length);
 
-        //const article = getPostContainer(userName, postObj[i].post);
-        const article = getPostContainer(userName, postArr[i]);     // <--- postArr[] statt postObj[]
-        console.log(postObj[i]);
+        const article = getPostContainer(userName, post);     
         document.getElementById("post-field").append(article);
     }
-
-
 }
 
+/**
+ * Methode kann genutzt werden um die Timeline eines Users zu erstellen.
+ * 
+ * @param {Number[]} usersToBeIncluded Ein Array, welches alle UIDs enthält, für die posts geladen werden sollen. Um Posts von allen Nutzern zu laden, kann für diesen Parameter -1 übergeben werden.
+ * @param {Number} maxAmountOfPostsToBeFetchedAtATime //Die (maximale) Anzahl von Posts, welche auf einmal nachgeladen werden. 10 ist der Defaultwert.
+ * @returns 
+ */
+export const buildPostTimeline = async (usersToBeIncluded, maxAmountOfPostsToBeFetchedAtATime) =>
+{
+    fetchLastNPosts(usersToBeIncluded, maxAmountOfPostsToBeFetchedAtATime);
+    //TODO: posts nachladen, nachdem das Ende der initial geladenen posts erreicht wurde
+}
 
 
 async function startAutoFetchRoutine(uid)
@@ -82,11 +74,6 @@ async function startAutoFetchRoutine(uid)
     var fetchedData = await getUserPostCount(uid);
     while (true)
     {
-     /*   if (fetchedData.state == "success")
-            console.log("User id #" + uid + " has currently " + fetchedData.count + " posts!");
-        else
-            console.log("error"); */
-
         oldData = fetchedData.count;
         fetchedData = await getUserPostCount(uid);
 

@@ -95,6 +95,40 @@ async function setFile(filename, pid) {
     }
 }
 
+async function getPostsByUids(uids, maxAmountOfReturnedPosts){
+    try {
+        if (uids === undefined)
+        {
+            uids = -1;
+            maxAmountOfReturnedPosts = 10;
+        }
+
+        if (+uids === -1)
+        {
+            //Posts für alle User zurückgeben (Public Feed)
+            const result = await connectAndQuery2(`
+                SELECT post.pid
+                FROM post
+                ORDER BY date DESC LIMIT ${maxAmountOfReturnedPosts}`);
+                console.log(result);
+            return result;
+        }  
+        else
+        {
+            //Posts für bestimmte User zurückgeben
+            await connectAndQuery2(`
+                SELECT post.pid
+                FROM post
+                WHERE uid IN (${uids.map(() => '?').join(', ')})`);
+            return result;
+        }
+        
+        
+    } catch (err) {
+        console.error(err.message);
+        return "err";
+    }
+}
 
 
 async function getPostByPid(pid){
@@ -112,6 +146,7 @@ async function getPostByPid(pid){
         return "err";
     }
 }
+
 async function getPostByUid(uid, limit){
     try {
         const result = await connectAndQuery2(`
@@ -179,5 +214,6 @@ module.exports = {
     getPostsForUID,
     setFile,
     getPostByPid,
-    getPostByUid
+    getPostByUid,
+    getPostsByUids
 }
