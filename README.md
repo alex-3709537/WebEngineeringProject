@@ -37,6 +37,8 @@
 	`npm install multer`
 7. install mysql2 
 	`npm install mysql2`
+8. install multer sharp
+	`npm install multer sharp`
 
 
 ## Dokumentation

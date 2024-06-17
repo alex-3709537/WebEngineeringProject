@@ -4,7 +4,10 @@ const {
     getPostByPid,
     getPostByUid
 } = require("../model/mysqlHandler");
+const sharp = require("sharp");
+const path = require("path");
 
+const maxImageSize = 500;
 
 const getFullPost = async (req, res) => {
     const result = await getPostByPid(req.query.pid);
@@ -20,18 +23,7 @@ const getFullPost = async (req, res) => {
             if (fieldName === "data") {
                 if (element.data != "" && element.data != null) {
                     element[fieldName] = arrayBufferToBase64(element[fieldName]);
-                    let contentType;
-
-                    if (element.type === ".mp4") {
-                        contentType = "video/mp4";
-                    } else if (element.type === ".jpg" || element.type === ".jpeg") {
-                        contentType = "image/jpeg";
-                    } else if (element.type === ".png") {
-                        contentType = "image/png";
-                    } else {
-                        contentType = "text/plain";
-                        element[fieldName] = "unknown-Content-Type";
-                    }
+                    var contentType = element.type;
 
                     res.write(`--${boundary}\r\n`);
                     res.write(`Content-Disposition: form-data; name="${fieldName}"; filename="file${element.type}"\r\n`);
@@ -55,14 +47,15 @@ const getFullPost = async (req, res) => {
 
 const createPost = async (req, res) => {
     const text = req.body.text_input;
-    const image = req.file;
+    const file = req.file;
 
     const result = await setPost(req.session.user.uid, text);
 
 
-    if (image != undefined) {
+    if (file != undefined) {
         console.log("Datei gesendet");
-        const result2 = await setFile(req.file.filename, result.insertId);
+       
+        const result2 = await setFile(result.insertId, req.file.buffer, req.file.mimetype);
     } else {
         console.log("Keine Datei gesendet");
     }
@@ -82,7 +75,49 @@ function arrayBufferToBase64(buffer) {
     }
     return btoa(binary);
 }
+
+const resizeImage = async (req, res, next) => {
+    if (!req.file || req.file.mimetype.split("/")[0] == "video") {
+        return next();
+    }
+
+    try {
+        
+        const metadata = await sharp(req.file.buffer).metadata();
+        console.log(`Breite : ${metadata.width}px Höhe: ${metadata.height}px`);
+        req.file.metadata = metadata;
+        const height = metadata.height;
+        const width = metadata.width;
+
+        
+        if(height > maxImageSize || width > maxImageSize){
+            var newWidth;
+            var newHeight;
+            if(height > width){
+                newHeight = maxImageSize;
+                newWidth = Math.floor((maxImageSize/height) * width);
+            }else{
+                newWidth = maxImageSize;
+                newHeight = Math.floor((maxImageSize/width) * height);
+            }
+
+            const resizedImageBuffer = await sharp(req.file.buffer)
+            .resize(newWidth, newHeight) // Ändere die Größe auf 300x300
+            .toBuffer();
+
+            req.file.buffer = resizedImageBuffer;    
+            console.log(`[NEW] Breite : ${newWidth}px Höhe: ${newHeight}px`);
+        }
+          
+
+        next();
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 module.exports = {
     createPost,
-    getFullPost
+    getFullPost,
+    resizeImage
 }

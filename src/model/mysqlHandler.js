@@ -80,13 +80,11 @@ async function setPost(uid, post) {
     }
 }
 
-async function setFile(filename, pid) {
+async function setFile(pid, data, type) {
     try {
-        filePath = `${path.join(__dirname + "/../resources/")}${filename}`;
+     
         // Datei lesen
-        const data = await fs.readFile(filePath);
-        const type = path.extname(filename);
-        const result = await connectAndQuery2(`INSERT INTO files (name, type, data, pid) VALUES(?, ?, ?, ?)`, [filename, type, data, pid]);
+        const result = await connectAndQuery2(`INSERT INTO files (name, type, data, pid) VALUES(CURRENT_TIMESTAMP, ?, ?, ?)`, [type, data, pid]);
 
         return result;
     } catch (err) {
@@ -173,10 +171,10 @@ async function connectAndQuery(query) {
         const queryPromise = util.promisify(con.query).bind(con);
 
         await connect();
-        console.log("Connection to Database successfull");
+        //console.log("Connection to Database successfull");
 
         const result = await queryPromise(query);
-        console.log("Sql Query executed successfully!");
+        //console.log("Sql Query executed successfully!");
 
         return result;
     } catch (err) {
