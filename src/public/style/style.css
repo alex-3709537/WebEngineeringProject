@@ -61,11 +61,19 @@ footer {
     margin: 10px;
 }
 
-.flex-container-post-header {
+.flex-container-post-username {
     font-size:20px;
     color: purple;
     font-weight: bold;
     
+}
+
+.flex-container-post-header {
+    display: flex;
+}
+
+.flex-container-post-header > div {
+    margin: 5px;
 }
 
 .posts{
@@ -73,4 +81,10 @@ footer {
     width: 900px;
     height: 500px;
 
+}
+
+.flex-container-post-date{
+    color: grey;
+    font-style: italic;
+    font-size:20px;
 }
