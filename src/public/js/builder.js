@@ -42,10 +42,13 @@ export function getPostContainer(username, post) {
 }
 
 function getDate(date){
-    const d = new Date(date);
     const dn = new Date();
+    const d = new Date(date);   
 
-    const timeDiff = dn.getTime() - d.getTime();
+    var timeDiff = dn.getTime() - d.getTime();
+
+    if(timeDiff < 0) timeDiff = 0; 
+
     var timeString;
 
     if((timeDiff / 1000) < 60){
