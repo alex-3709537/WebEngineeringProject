@@ -170,6 +170,15 @@ export const getUserInfo = async () => {
     return result;
 }
 
+/**
+ * 
+ * @returns array von objekten mit userid und username
+ */
+export const getAllUserInfo = async () => {
+    const result = await sendReq("GET", "/blog/getAllUsers/");
+    return result;
+}
+
 export const getUserByUID = async (uid) => {
     const result = await sendReq("GET", "/blog/user/uid", {uid:uid});
     return result;
@@ -185,6 +194,12 @@ export const getUserPostCount = async (uid) => {
    const result = await sendReq("GET", "/blog/getUserPostCount/", uid);
     return result;
 }
+export const getPostCountForUIDs = async (uids) => {
+    const reqBody = { uids: uids };
+    console.log("reqbody: "+ JSON.stringify(reqBody));
+    const result = await sendReq("GET", "/blog/getPostCountForUIDs/", JSON.stringify(reqBody));
+     return result;
+ }
 
 export const getUserPostPids = async (uid, postCount) => {
     const reqBody = { uid: uid, maxAmountOfReturnedPosts: postCount };

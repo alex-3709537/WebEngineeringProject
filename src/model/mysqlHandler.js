@@ -27,6 +27,17 @@ async function getUserByUID(uid) {
     }
 }
 
+async function getAllUsers() {
+    try {
+        const result = await connectAndQuery(`SELECT uid, username FROM users`);
+         
+        return result;
+    } catch (err) {
+        console.error(err.message);
+        return err;
+    }
+}
+
 //result[0] ein object mit Parameter "COUNT(*)", was mit js nicht direkt abgegriffen werden kann wegen den Sonderzeichen;
 //daher JSON.stringify(result) als workaround.
 //Hinweis: .indexof(":") ist hier sicher, da das resultString-Objekt immer nach folgendem schema aufgebaut ist:
@@ -113,12 +124,56 @@ async function getPostsByUids(uids, maxAmountOfReturnedPosts){
         }  
         else
         {
+            var ichHasseJavaScript = Array.isArray(uids) ? uids.join(', ') : ("" + uids);
+            console.log(ichHasseJavaScript);
+
             //Posts für bestimmte User zurückgeben
-            await connectAndQuery2(`
+            const result = await connectAndQuery2(`
                 SELECT post.pid
                 FROM post
-                WHERE uid IN (${uids.map(() => '?').join(', ')})`);
+                WHERE uid IN (${ichHasseJavaScript})
+                ORDER BY date DESC LIMIT ${maxAmountOfReturnedPosts}`);
+
+                console.log("result thingy: " + result);
+                console.log("result thingy: " + JSON.stringify(result));
+
             return result;
+        }
+        
+    } catch (err) {
+        console.error(err.message);
+        return "err";
+    }
+}
+
+//wird genutzt, um effizienter updates abzufragen, da sich der count erhöht, sobald einer der user einen neuen post hochgeladen hat
+async function getPostCountForUIDs(uids){
+    try {
+        if (uids === undefined)
+        {
+            uids = -1;
+            maxAmountOfReturnedPosts = 10;
+        }
+
+        if (+uids === -1)
+        {
+            //Posts für alle User zurückgeben (Public Feed)
+            const result = await connectAndQuery2(`
+                SELECT COUNT (*) AS count
+                FROM post`);
+                console.log(result[0]);
+            return result[0].count;
+        }  
+        else
+        {
+            var ichHasseJavaScript = Array.isArray(uids) ? uids.join(', ') : ("" + uids);
+            console.log(ichHasseJavaScript);
+            //Posts für bestimmte User zurückgeben
+            const result = await connectAndQuery2(`
+                SELECT COUNT (*) AS count
+                FROM post
+                WHERE uid IN (${ichHasseJavaScript})`);
+            return result[0].count;
         }
         
         
@@ -206,6 +261,7 @@ async function connectAndQuery2(query, data) {
 module.exports = {
     getUser,
     getUserByUID,
+    getAllUsers,
     setUser,
     setPost,
     getPostCountForUID,
@@ -213,5 +269,6 @@ module.exports = {
     setFile,
     getPostByPid,
     getPostByUid,
-    getPostsByUids
+    getPostsByUids,
+    getPostCountForUIDs,
 }

@@ -1,4 +1,4 @@
-import { getUserByUID, getUserInfo, getUserPostCount, getUserPostPids, getFullPost } from "./api.js";
+import { getUserByUID, getUserInfo, getUserPostCount, getUserPostPids, getFullPost, getAllUserInfo, getPostCountForUIDs } from "./api.js";
 import { getPostContainer } from "./builder.js";
 
 
@@ -12,8 +12,15 @@ window.onload = async function()
     //bisherige User-Posts von allen Usern (-1) reinladen
     buildPostTimeline(-1, 10);
 
+    const users = await getAllUserInfo();
+
+    const monitoredUIDs = [];
+    monitoredUIDs.push(users.map(user => user.uid));
+    
+    console.log("Monitored UIDs: " + JSON.stringify(monitoredUIDs));
+
     //automatisches Überprüfen auf neue Posts beginnen
-    startAutoFetchRoutine(currentUser.uid);
+    startAutoFetchRoutine2(monitoredUIDs);
 };
 
 
@@ -26,6 +33,7 @@ async function fetchLastNPosts(users, maxAmountOfPostsToBeFetched)
 {
     //pids laden
     const pids = await getUserPostPids(users, maxAmountOfPostsToBeFetched);
+
 
     for(let i = pids.length - 1; i >= 0; i--)
     {
@@ -67,7 +75,6 @@ export const buildPostTimeline = async (usersToBeIncluded, maxAmountOfPostsToBeF
     //TODO: posts nachladen, nachdem das Ende der initial geladenen posts erreicht wurde
 }
 
-
 async function startAutoFetchRoutine(uid)
 {
     var oldData = -1;
@@ -76,6 +83,36 @@ async function startAutoFetchRoutine(uid)
     {
         oldData = fetchedData.count;
         fetchedData = await getUserPostCount(uid);
+
+        await sleep(2000);
+    }
+}
+
+/**
+ * @param {Number[]} uid Ein Array, welches alle UIDs enthält, für die posts geladen werden sollen. Um Posts von allen Nutzern zu laden, kann für diesen Parameter -1 übergeben werden.
+ * @returns 
+ */
+async function startAutoFetchRoutine2(uids)
+{
+    var oldData;
+    console.log("idk: " + JSON.stringify(uids));
+    var fetchedData = await getPostCountForUIDs(uids);
+    console.log("fetched post count: " + fetchedData.count);
+
+    while (true)
+    {
+        oldData = fetchedData.count;
+        fetchedData = await getPostCountForUIDs(uids);
+
+        console.log("o:" + oldData);
+        console.log("n:" + fetchedData.count);
+
+        if (+oldData != +fetchedData.count)
+        {
+            console.log("Fetching " + (+fetchedData.count - +oldData) + " new posts...");
+
+            fetchLastNPosts(uids, +fetchedData.count - +oldData);
+        }
 
         await sleep(2000);
     }
