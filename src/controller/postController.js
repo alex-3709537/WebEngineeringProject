@@ -2,23 +2,33 @@ const {
     setPost,
     setFile,
     getPostByPid,
-    getPostByUid
+    getPostByUid,
+    getLikesCount,
+    getDistinctLike,
+    changeLike,
+    createLike,
+    deleteLike
 } = require("../model/mysqlHandler");
 const sharp = require("sharp");
 const path = require("path");
+const { get } = require("http");
 
 const maxImageSize = 500;
 
 const getFullPost = async (req, res) => {
     const result = await getPostByPid(req.query.pid);
-
+    
     const boundary = 'boundary12345';
 
     res.writeHead(200, {
         'Content-Type': `multipart/form-data; boundary=${boundary}`
     });
 
-    result.forEach(element => {
+    result.forEach(async (element)   =>  {
+        const likes = await getLikes(element.pid);
+        element.likes = likes.Like_Count;
+        element.dislikes = likes.Dislike_Count;
+       
         for (const fieldName in element) {
             if (fieldName === "data") {
                 if (element.data != "" && element.data != null) {
@@ -62,7 +72,7 @@ const createPost = async (req, res) => {
 
     res.json({
         message: "post erfolgreich hochgeladen",
-        uid: req.session.uid, pid: result.insertId,
+        uid: req.session.user.uid, pid: result.insertId,
         username: req.session.user.username
     });
 }
@@ -116,8 +126,41 @@ const resizeImage = async (req, res, next) => {
     }
 }
 
+const setLike = async(req, res) => {
+    const liked = req.body.liked;
+    const pid = req.body.pid;
+    const uid = req.session.user.uid;
+
+    const result = await getDistinctLike(uid, pid);
+
+    if(result == []){
+        await createLike(pid, uid, liked);
+    }else{
+        if((result[0].liked == 1 && liked == 1) || (result[0].liked == 0 && liked == 0)){
+            await deleteLike(result[0].lid);
+        }else{
+            await changeLike(result[0].lid, liked);
+        }
+    }
+
+
+}
+
+const getLikes = async(pid) => {
+    const likes = await getLikesCount(pid);
+
+    if(likes.Like_Count == null){
+        likes.Like_Count = 0;
+    }
+    if(likes.Dislike_Count == null){
+        likes.Dislike_Count = 0;
+    }
+    console.log(likes);
+    return likes;
+}
 module.exports = {
     createPost,
     getFullPost,
-    resizeImage
+    resizeImage,
+    setLike
 }

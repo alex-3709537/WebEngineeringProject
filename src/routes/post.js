@@ -6,7 +6,8 @@ const path = require("path");
 const { 
     createPost,
     getFullPost,
-    resizeImage
+    resizeImage,
+    setLike
 } = require("../controller/postController");
 
 
@@ -16,5 +17,7 @@ const upload = multer({ storage: storage });
 router.post("/", upload.single("file_input"), resizeImage, createPost);
 
 router.get("/", getFullPost);
+
+router.post("/like", setLike);
 
 module.exports = router;
