@@ -95,7 +95,7 @@ async function setFile(pid, data, type) {
     try {
      
         // Datei lesen
-        const result = await connectAndQuery2(`INSERT INTO files (name, type, data, pid) VALUES(CURRENT_TIMESTAMP, ?, ?, ?)`, [type, data, pid]);
+        const result = await connectAndQuery2(`INSERT INTO files (name, type, data, fid) VALUES(CURRENT_TIMESTAMP, ?, ?, ?)`, [type, data, pid]);
 
         return result;
     } catch (err) {
@@ -189,7 +189,7 @@ async function getPostByPid(pid){
         const result = await connectAndQuery2(`
             SELECT post.*, files.*
             FROM post
-            LEFT JOIN files ON post.pid = files.pid
+            LEFT JOIN files ON post.pid = files.fid
             WHERE post.pid = ?`, 
             [pid]);
 
@@ -199,24 +199,6 @@ async function getPostByPid(pid){
         return "err";
     }
 }
-
-async function getPostByUid(uid, limit){
-    try {
-        const result = await connectAndQuery2(`
-            SELECT TOP ? post.*, files.*
-            FROM post
-            LEFT JOIN files ON post.pid = files.pid
-            WHERE post.uid = ?
-            ORDER BY date`, 
-            [limit, uid]);
-
-        return result;
-    } catch (error) {
-        console.error(err.message);
-        return "err";
-    }
-}
-
 
 async function connectAndQuery(query) {
     let con;
@@ -268,7 +250,6 @@ module.exports = {
     getPostsForUID,
     setFile,
     getPostByPid,
-    getPostByUid,
     getPostsByUids,
     getPostCountForUIDs,
 }
