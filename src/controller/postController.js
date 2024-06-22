@@ -16,43 +16,57 @@ const { get } = require("http");
 const maxImageSize = 500;
 
 const getFullPost = async (req, res) => {
-    const result = await getPostByPid(req.query.pid);
-    
-    const boundary = 'boundary12345';
+    try {
+        const result = await getPostByPid(req.query.pid);
+        const boundary = 'boundary12345';
 
-    res.writeHead(200, {
-        'Content-Type': `multipart/form-data; boundary=${boundary}`
-    });
+        const fullPostPromises = result.map(async (element) => {
+            const likes = await getLikes(element.pid);
+            element.likes = likes.Like_Count;
+            element.dislikes = likes.Dislike_Count;
 
-    result.forEach(async (element)   =>  {
-        const likes = await getLikes(element.pid);
-        element.likes = likes.Like_Count;
-        element.dislikes = likes.Dislike_Count;
-       
-        for (const fieldName in element) {
-            if (fieldName === "data") {
-                if (element.data != "" && element.data != null) {
-                    element[fieldName] = arrayBufferToBase64(element[fieldName]);
-                    var contentType = element.type;
+            const parts = [];
+            for (const fieldName in element) {
+                if (fieldName === "data") {
+                    if (element.data != "" && element.data != null) {
+                        const contentType = element.type;
+                        const base64Data = arrayBufferToBase64(element[fieldName]);
 
-                    res.write(`--${boundary}\r\n`);
-                    res.write(`Content-Disposition: form-data; name="${fieldName}"; filename="file${element.type}"\r\n`);
-                    res.write(`Content-Type: ${contentType}\r\n`);
-                    res.write('Content-Transfer-Encoding: base64\r\n\r\n');
-                    res.write(`${element[fieldName]}\r\n`);
+                        parts.push(
+                            `--${boundary}\r\n` +
+                            `Content-Disposition: form-data; name="${fieldName}"; filename="file${element.type}"\r\n` +
+                            `Content-Type: ${contentType}\r\n` +
+                            'Content-Transfer-Encoding: base64\r\n\r\n' +
+                            `${base64Data}\r\n`
+                        );
+
+                    }
+                } else {
+                    parts.push(
+                        `--${boundary}\r\n` +
+                        `Content-Disposition: form-data; name="${fieldName}"\r\n` +
+                        'Content-Type: text/plain\r\n\r\n' +
+                        `${element[fieldName] == null ? "" : element[fieldName]}\r\n`
+                    );
                 }
-            } else {
-                res.write(`--${boundary}\r\n`);
-                res.write(`Content-Disposition: form-data; name="${fieldName}"\r\n`);
-                res.write('Content-Type: text/plain\r\n\r\n');
-                res.write(`${element[fieldName] == null ? "" : element[fieldName]}\r\n`);
             }
-        }
-    });
+            return parts.join('');
+        });
 
-    // Abschlussgrenze
-    res.end(`--${boundary}--`);
+        const fullPosts = await Promise.all(fullPostPromises);
+
+        res.writeHead(200, {
+            'Content-Type': `multipart/form-data; boundary=${boundary}`
+        });
+
+        fullPosts.forEach(part => res.write(part));
+        res.end(`--${boundary}--`);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Internal Server Error");
+    }
 };
+
 
 
 const createPost = async (req, res) => {
@@ -155,7 +169,7 @@ const getLikes = async(pid) => {
     if(likes.Dislike_Count == null){
         likes.Dislike_Count = 0;
     }
-    console.log(likes);
+    
     return likes;
 }
 module.exports = {
