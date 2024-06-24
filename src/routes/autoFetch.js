@@ -3,10 +3,10 @@ const router = express.Router();
 
 const { fetchPostCountForUID, fetchPostCountForUIDs, fetchAllUsers, fetchPostsForUIDs } = require("../controller/autoFetchController");
 
-router.get("/getUserPostCount", fetchPostCountForUID);
-router.get("/getPostCountForUIDs", fetchPostCountForUIDs);
-router.get("/getUserPosts", fetchPostsForUIDs);
-router.get("/getAllUsers", fetchAllUsers);
+router.get("/userPostCount", fetchPostCountForUID);
+router.get("/postCountForUIDs", fetchPostCountForUIDs);
+router.get("/userPosts", fetchPostsForUIDs);
+router.get("/allUsers", fetchAllUsers);
 
 
 

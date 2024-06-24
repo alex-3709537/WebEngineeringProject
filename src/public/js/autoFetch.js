@@ -20,7 +20,10 @@ window.onload = async function()
     console.log("Monitored UIDs: " + JSON.stringify(monitoredUIDs));
 
     //automatisches Überprüfen auf neue Posts beginnen
-    startAutoFetchRoutine2(monitoredUIDs);
+    startAutoFetchRoutine(monitoredUIDs);
+
+
+    
 };
 
 
@@ -58,7 +61,7 @@ async function fetchLastNPosts(users, maxAmountOfPostsToBeFetched)
         }
 
         const article = getPostContainer(userName, post);     
-        document.getElementById("post-field").append(article);
+        document.getElementById("post-field").prepend(article);
     }
 }
 
@@ -75,24 +78,11 @@ export const buildPostTimeline = async (usersToBeIncluded, maxAmountOfPostsToBeF
     //TODO: posts nachladen, nachdem das Ende der initial geladenen posts erreicht wurde
 }
 
-async function startAutoFetchRoutine(uid)
-{
-    var oldData = -1;
-    var fetchedData = await getUserPostCount(uid);
-    while (true)
-    {
-        oldData = fetchedData.count;
-        fetchedData = await getUserPostCount(uid);
-
-        await sleep(2000);
-    }
-}
-
 /**
  * @param {Number[]} uid Ein Array, welches alle UIDs enthält, für die posts geladen werden sollen. Um Posts von allen Nutzern zu laden, kann für diesen Parameter -1 übergeben werden.
  * @returns 
  */
-async function startAutoFetchRoutine2(uids)
+async function startAutoFetchRoutine(uids)
 {
     var oldData;
     console.log("idk: " + JSON.stringify(uids));

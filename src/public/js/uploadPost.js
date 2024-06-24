@@ -20,10 +20,6 @@ document.getElementById("post-form").addEventListener("submit", async function(e
 
     postField.value = "";
     document.getElementById("file-input").value = "";
-      
-  /*  const post = await getFullPost(result.pid);
-    const div = getPostContainer(result.username, post);
-    document.getElementById("post-field").append(div); */
   }
   
 });
