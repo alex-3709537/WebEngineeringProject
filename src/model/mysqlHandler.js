@@ -185,6 +185,7 @@ async function getPostCountForUIDs(uids){
 
 
 async function getPostByPid(pid){
+    
     try {
         const result = await connectAndQuery2(`
             SELECT post.*, files.*
@@ -192,7 +193,7 @@ async function getPostByPid(pid){
             LEFT JOIN files ON post.pid = files.fid
             WHERE post.pid = ?`, 
             [pid]);
-
+       
         return result;
     } catch (err) {
         console.error(err.message);
@@ -240,6 +241,92 @@ async function connectAndQuery2(query, data) {
     }
 }
 
+async function getDistinctLike(uid, pid){
+    try {
+        const result = await connectAndQuery2(`
+            SELECT * 
+            FROM likes
+            WHERE likes.pid = ?
+            AND likes.uid = ?`, 
+            [pid, uid]);
+        return result[0];
+    } catch (err) {
+        console.error(err.message);
+        return "err";
+    }
+}
+
+async function changeLike(lid, liked){
+    try {
+        
+        const result = await connectAndQuery2(`
+            UPDATE likes 
+            SET liked = ? 
+            WHERE likes.lid = ?
+            `, 
+            [liked, lid]);
+        
+
+        return result;
+    } catch (err) {
+        console.error(err.message);
+        return "err";
+    }
+}
+
+async function deleteLike(lid){
+    try {
+        
+        const result = await connectAndQuery2(`
+            DELETE FROM likes
+            WHERE likes.lid = ?`, 
+            [lid]);
+        
+
+        return result;
+    } catch (err) {
+        console.error(err.message);
+        return "err";
+    }
+}
+
+
+async function createLike(pid, uid, liked){
+    try {
+        
+        const result = await connectAndQuery2(`
+            INSERT INTO likes (pid,uid,liked,date)
+            VALUES (?,?,?,CURRENT_TIMESTAMP)
+            `, 
+            [pid,uid,liked]);
+        
+
+        return result;
+    } catch (err) {
+        console.error(err.message);
+        return "err";
+    }
+}
+
+async function getLikesCount(pid){
+    try {
+        const result = await connectAndQuery2(`
+            SELECT
+            SUM(liked) AS Like_Count,
+            COUNT(*) - SUM(liked) AS Dislike_Count
+            FROM
+            likes
+            WHERE likes.pid = ? `, 
+            [pid]);
+        
+        return result[0];
+    } catch (err) {
+        console.error(err.message);
+        return "err";
+    }
+}
+
+
 module.exports = {
     getUser,
     getUserByUID,
@@ -252,4 +339,9 @@ module.exports = {
     getPostByPid,
     getPostsByUids,
     getPostCountForUIDs,
+    getLikesCount,
+    getDistinctLike,
+    changeLike,
+    createLike,
+    deleteLike
 }

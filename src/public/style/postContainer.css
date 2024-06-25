@@ -1,0 +1,44 @@
+
+.flex-container-post-date{
+    color: grey;
+    font-style: italic;
+    font-size:20px;
+}
+
+
+.flex-container-post{
+    padding: 10px;
+    display:flexbox;
+    border:3px solid grey;
+    width: 100%;
+    margin: 10px;
+}
+
+.flex-container-post-username {
+    font-size:20px;
+    color: purple;
+    font-weight: bold;
+    
+}
+
+.flex-container-post-header {
+    display: flex;
+}
+
+.flex-container-post-header > div {
+    margin: 5px;
+}
+
+.like-container{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.like-container * {
+    margin: 2px;
+    
+}
+
+.like-count, .dislike-count{
+    font-weight: bold;
+}
