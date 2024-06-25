@@ -24,7 +24,7 @@ const getFullPost = async (req, res) => {
             const likes = await getLikes(element.pid);
             element.likes = likes.Like_Count;
             element.dislikes = likes.Dislike_Count;
-
+            element.liked = await checkIfLiked(req.session.user.uid, element.pid);
             const parts = [];
             for (const fieldName in element) {
                 if (fieldName === "data") {
@@ -78,7 +78,7 @@ const createPost = async (req, res) => {
 
     if (file != undefined) {
         console.log("Datei gesendet");
-       
+
         const result2 = await setFile(result.insertId, req.file.buffer, req.file.mimetype);
     } else {
         console.log("Keine Datei gesendet");
@@ -106,33 +106,33 @@ const resizeImage = async (req, res, next) => {
     }
 
     try {
-        
+
         const metadata = await sharp(req.file.buffer).metadata();
         console.log(`Breite : ${metadata.width}px Höhe: ${metadata.height}px`);
         req.file.metadata = metadata;
         const height = metadata.height;
         const width = metadata.width;
 
-        
-        if(height > maxImageSize || width > maxImageSize){
+
+        if (height > maxImageSize || width > maxImageSize) {
             var newWidth;
             var newHeight;
-            if(height > width){
+            if (height > width) {
                 newHeight = maxImageSize;
-                newWidth = Math.floor((maxImageSize/height) * width);
-            }else{
+                newWidth = Math.floor((maxImageSize / height) * width);
+            } else {
                 newWidth = maxImageSize;
-                newHeight = Math.floor((maxImageSize/width) * height);
+                newHeight = Math.floor((maxImageSize / width) * height);
             }
 
             const resizedImageBuffer = await sharp(req.file.buffer)
-            .resize(newWidth, newHeight) // Ändere die Größe auf 300x300
-            .toBuffer();
+                .resize(newWidth, newHeight) // Ändere die Größe auf 300x300
+                .toBuffer();
 
-            req.file.buffer = resizedImageBuffer;    
+            req.file.buffer = resizedImageBuffer;
             console.log(`[NEW] Breite : ${newWidth}px Höhe: ${newHeight}px`);
         }
-          
+
 
         next();
     } catch (err) {
@@ -140,37 +140,55 @@ const resizeImage = async (req, res, next) => {
     }
 }
 
-const setLike = async(req, res) => {
-    const liked = req.body.liked;
-    const pid = req.body.pid;
-    const uid = req.session.user.uid;
+const setLike = async (req, res) => {
+    try {
+        const liked = req.body.liked;
+        const pid = req.body.pid;
+        const uid = req.session.user.uid;
+        
+        if( liked > 1 ) throw new Error("Like value must not be higher then 1");
 
-    const result = await getDistinctLike(uid, pid);
+        const result = await getDistinctLike(uid, pid);
 
-    if(result == []){
-        await createLike(pid, uid, liked);
-    }else{
-        if((result[0].liked == 1 && liked == 1) || (result[0].liked == 0 && liked == 0)){
-            await deleteLike(result[0].lid);
-        }else{
-            await changeLike(result[0].lid, liked);
+        if (result == undefined) {
+
+            await createLike(pid, uid, liked);
+        } else {
+            if ((result.liked == 1 && liked == 1) || (result.liked == 0 && liked == 0)) {
+                await deleteLike(result.lid);
+            } else {
+                await changeLike(result.lid, liked);
+            }
         }
+        res.json({ message: "like changed" });
+    } catch (err) {
+        console.error(err.message);
     }
-
 
 }
 
-const getLikes = async(pid) => {
+const getLikes = async (pid) => {
     const likes = await getLikesCount(pid);
 
-    if(likes.Like_Count == null){
+    if (likes.Like_Count == null) {
         likes.Like_Count = 0;
     }
-    if(likes.Dislike_Count == null){
+    if (likes.Dislike_Count == null) {
         likes.Dislike_Count = 0;
     }
-    
+
     return likes;
+}
+
+const checkIfLiked = async (uid, pid) => {
+    const liked = await getDistinctLike(uid, pid);
+    if (liked != undefined) {
+        const value = liked.liked;
+        
+        return value;
+    }
+
+    return -1;
 }
 module.exports = {
     createPost,

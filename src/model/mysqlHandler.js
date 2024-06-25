@@ -267,8 +267,7 @@ async function getDistinctLike(uid, pid){
             WHERE likes.pid = ?
             AND likes.uid = ?`, 
             [pid, uid]);
-
-        return result;
+        return result[0];
     } catch (err) {
         console.error(err.message);
         return "err";
@@ -279,9 +278,10 @@ async function changeLike(lid, liked){
     try {
         
         const result = await connectAndQuery2(`
-            INSERT INTO likes (like, date)
-            VALUES(?,CURRENT_TIMESTAMP)
-            WHERE likes.lid = ?`, 
+            UPDATE likes 
+            SET liked = ? 
+            WHERE likes.lid = ?
+            `, 
             [liked, lid]);
         
 
@@ -296,7 +296,7 @@ async function deleteLike(lid){
     try {
         
         const result = await connectAndQuery2(`
-            DELETE * FROM likes
+            DELETE FROM likes
             WHERE likes.lid = ?`, 
             [lid]);
         
@@ -336,7 +336,7 @@ async function getLikesCount(pid){
             likes
             WHERE likes.pid = ? `, 
             [pid]);
-        console.log(result);
+        
         return result[0];
     } catch (err) {
         console.error(err.message);

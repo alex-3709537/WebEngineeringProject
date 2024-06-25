@@ -1,3 +1,5 @@
+import { likeEvent } from "./postEventHandler.js";
+
 export function getPostContainer(username, post) {
     try {
         console.log("post: ", post);
@@ -12,6 +14,8 @@ export function getPostContainer(username, post) {
         const divHeader = document.createElement("div");
         const p = document.createElement("p");
         const divDate = document.createElement("div");
+        
+
 
         divHeader.setAttribute("class", "flex-container-post-header");
         divDate.setAttribute("class", "flex-container-post-date");
@@ -35,9 +39,21 @@ export function getPostContainer(username, post) {
         divText.appendChild(p);
         divMain.appendChild(divText);
 
+        const divFooter = document.createElement("div");
+        divFooter.setAttribute("class","post-footer");
+
+        const likeContainer = createLikeDislikeElements(post.likes, post.dislikes, post.liked);
+        likeContainer.setAttribute("id", post.pid);
+        divFooter.appendChild(likeContainer);
+
+
+  
+
+        divMain.appendChild(divFooter);
+
         return divMain;
     } catch (err) {
-        console.log(err.message);
+        console.log(err);
     }
 }
 
@@ -81,3 +97,65 @@ function getDate(date){
         }
     }
 }
+
+// Funktion zum Erstellen der Elemente
+function createLikeDislikeElements(likecount, dislikecount, liked) {
+    
+    // Erstelle das übergeordnete div-Element
+    const likeContainer = document.createElement('div');
+    likeContainer.id = 'like-container';
+    likeContainer.className = 'like-container';
+
+    // Erstelle das Like-Checkbox-Element
+    const likeCheckbox = document.createElement('input');
+    likeCheckbox.type = 'checkbox';
+    likeCheckbox.className = 'like-button';
+
+    if(liked == 1) likeCheckbox.checked = true;
+
+    likeCheckbox.addEventListener("click", likeEvent);
+
+    // Erstelle das Like-Label-Element
+    const likeLabel = document.createElement('label');
+    likeLabel.htmlFor = 'like-button';
+    likeLabel.textContent = '[LIKE]';
+
+    // Erstelle das Like-Count-Element
+    const likeCount = document.createElement('div');
+    likeCount.className = 'like-count';
+    likeCount.innerHTML = likecount;
+
+    // Erstelle das Dislike-Checkbox-Element
+    const dislikeCheckbox = document.createElement('input');
+    dislikeCheckbox.type = 'checkbox';
+    dislikeCheckbox.className = 'dislike-button';
+
+    if(liked == 0) dislikeCheckbox.checked = true;
+
+    dislikeCheckbox.addEventListener("click", likeEvent);
+
+    // Erstelle das Dislike-Label-Element
+    const dislikeLabel = document.createElement('label');
+    dislikeLabel.htmlFor = 'dislike-button';
+    dislikeLabel.textContent = '[DISLIKE]';
+
+    // Erstelle das Dislike-Count-Element
+    const dislikeCount = document.createElement('div');
+    dislikeCount.className = 'dislike-count';
+    dislikeCount.innerHTML = dislikecount;
+    
+
+    // Füge alle Elemente zum Container hinzu
+    likeContainer.appendChild(likeCheckbox);
+    likeContainer.appendChild(likeLabel);
+    likeContainer.appendChild(likeCount);
+    likeContainer.appendChild(dislikeCheckbox);
+    likeContainer.appendChild(dislikeLabel);
+    likeContainer.appendChild(dislikeCount);
+
+
+    // Füge den Container zum Body hinzu
+    return likeContainer;
+}
+
+

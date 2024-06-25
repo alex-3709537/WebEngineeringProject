@@ -278,3 +278,8 @@ export const getFullPost = async (pid) => {
   //  console.log("post: " + JSON.stringify(postElements));
     return postElements;
 }
+
+export const changeLike = async (pid, liked) => {
+    const result = sendReq("POST", "/blog/post/like", {pid:pid, liked:liked});
+    return result;
+}
