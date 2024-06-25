@@ -43,10 +43,9 @@ const fetchAllUsers = async (req, res) =>{
 
 const fetchPostsForUIDs = async (req, res) =>{
 
-    console.log("Fetching a maximum of " + req.query.maxAmountOfReturnedPosts + " posts for uid " + req.query.uid);
-    const result = await getPostsByUids(req.query.uid, req.query.maxAmountOfReturnedPosts);
+    console.log("Fetching a maximum of " + req.query.maxAmountOfReturnedPosts + " posts for uid " + req.query.uid + " which were created before " + req.query.lastLoadedPostCreationDate + "...");
+    const result = await getPostsByUids(req.query.uid, req.query.maxAmountOfReturnedPosts, req.query.lastLoadedPostCreationDate);
     res.json(result);
-
 }
 
 module.exports = {

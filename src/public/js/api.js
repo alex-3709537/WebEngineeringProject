@@ -201,8 +201,8 @@ export const getPostCountForUIDs = async (uids) => {
      return result;
  }
 
-export const getUserPostPids = async (uid, postCount) => {
-    const reqBody = { uid: uid, maxAmountOfReturnedPosts: postCount };
+export const getUserPostPids = async (uid, postCount, lastLoadedPostCreationDate) => {
+    const reqBody = { uid: uid, maxAmountOfReturnedPosts: postCount, lastLoadedPostCreationDate: lastLoadedPostCreationDate };
     const pids = await sendReq("GET", "/blog/userPosts/", reqBody);
     return pids;
 }

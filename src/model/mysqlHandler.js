@@ -104,7 +104,7 @@ async function setFile(pid, data, type) {
     }
 }
 
-async function getPostsByUids(uids, maxAmountOfReturnedPosts){
+async function getPostsByUids(uids, maxAmountOfReturnedPosts, lastLoadedPostCreationDate){
     try {
         if (uids === undefined)
         {
@@ -112,14 +112,23 @@ async function getPostsByUids(uids, maxAmountOfReturnedPosts){
             maxAmountOfReturnedPosts = 10;
         }
 
+        console.log("postdate: " + lastLoadedPostCreationDate);
+
+        //der iso string vom date objekt berücksichtigt das zeitzonen-offset nicht...
+        lastLoadedPostCreationDate = new Date(lastLoadedPostCreationDate);
+        lastLoadedPostCreationDate = new Date(lastLoadedPostCreationDate.setTime(lastLoadedPostCreationDate.getTime() + (((Number)(new Date().getTimezoneOffset())) * -1) * 60 * 1000)).toISOString();
+
+
         if (+uids === -1)
         {
             //Posts für alle User zurückgeben (Public Feed)
             const result = await connectAndQuery2(`
                 SELECT post.pid
                 FROM post
+                WHERE post.date < '${lastLoadedPostCreationDate}'
                 ORDER BY date DESC LIMIT ${maxAmountOfReturnedPosts}`);
-                console.log(result);
+                
+            console.log(result);
             return result;
         }  
         else
@@ -127,16 +136,16 @@ async function getPostsByUids(uids, maxAmountOfReturnedPosts){
             var ichHasseJavaScript = Array.isArray(uids) ? uids.join(', ') : ("" + uids);
             console.log(ichHasseJavaScript);
 
+            console.log("date: "  + lastLoadedPostCreationDate);
+
             //Posts für bestimmte User zurückgeben
             const result = await connectAndQuery2(`
                 SELECT post.pid
                 FROM post
-                WHERE uid IN (${ichHasseJavaScript})
+                WHERE post.date < '${lastLoadedPostCreationDate}'
                 ORDER BY date DESC LIMIT ${maxAmountOfReturnedPosts}`);
 
-                console.log("result thingy: " + result);
-                console.log("result thingy: " + JSON.stringify(result));
-
+            console.log(result);
             return result;
         }
         
@@ -145,6 +154,7 @@ async function getPostsByUids(uids, maxAmountOfReturnedPosts){
         return "err";
     }
 }
+
 
 //wird genutzt, um effizienter updates abzufragen, da sich der count erhöht, sobald einer der user einen neuen post hochgeladen hat
 async function getPostCountForUIDs(uids){
