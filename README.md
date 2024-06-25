@@ -66,24 +66,24 @@ GIT
  - [x] Jeder Zugriff auf Azure Datenbank
  - [x] Alle auf Gleichen Stand (MVC, frameworks)
  - [ ] Name von Website überlegen 
- - [ ] Datenbank Struktur überlegen (Grob) 
- - [ ] Überblick über Projektmanagement Aufgabe verschaffen
+ - [x] Datenbank Struktur überlegen (Grob) 
+ - [x] Überblick über Projektmanagement Aufgabe verschaffen
 
  - [x] Erste Text Posts schreiben (Alex)
  - [x] Bilder und Videos hochladen (Alex)
- - [ ] Datum anzeigen und Likes Funktion hinzufügen (Alex)
- - [ ] Feed immer im Hintergrund aktualisieren und neue Posts suchen (Lukas)
+ - [x] Datum anzeigen und Likes Funktion hinzufügen (Alex)
+ - [x] Feed immer im Hintergrund aktualisieren und neue Posts suchen (Lukas)
  - [ ] Freunde adden und Freundesliste anzeigen (Sebastian)
 
 
 ## Features
  - [x] Accounts anlegen
- - [ ] Posts hochladen (Text, Bilder, Videos) 
+ - [x] Posts hochladen (Text, Bilder, Videos) 
  - [ ] Andere Nutzer adden
  - [ ] Private Accounts
- - [ ] Recent Posts anzeigen
+ - [x] Recent Posts anzeigen
  - [ ] Nur Posts von Freunden anzeigen
- - [ ] Liken und kommentieren
+ - [x] Liken und kommentieren
  - [ ] Inhalte löschen und editieren
  
  
