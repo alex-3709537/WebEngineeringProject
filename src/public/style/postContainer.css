@@ -1,24 +1,21 @@
-
 .flex-container-post-date{
     color: grey;
     font-style: italic;
-    font-size:20px;
+    font-size: 20px;
 }
 
-
-.flex-container-post{
+.flex-container-post {
     padding: 10px;
-    display:flexbox;
-    border:3px solid grey;
+    display: flexbox; /* Korrektur hier */
+    border: 3px solid grey;
     width: 100%;
-    margin: 10px;
+    margin: 10px ; /* Korrigiert die Abstände */
 }
 
 .flex-container-post-username {
-    font-size:20px;
+    font-size: 20px;
     color: purple;
     font-weight: bold;
-    
 }
 
 .flex-container-post-header {
@@ -29,16 +26,15 @@
     margin: 5px;
 }
 
-.like-container{
+.like-container {
     display: flex;
     justify-content: flex-end;
 }
 
 .like-container * {
     margin: 2px;
-    
 }
 
-.like-count, .dislike-count{
+.like-count, .dislike-count {
     font-weight: bold;
 }

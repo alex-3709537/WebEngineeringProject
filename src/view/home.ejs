@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,49 +8,53 @@
     <link rel="stylesheet" href="../style/style.css">
     <link rel="stylesheet" href="../style/postContainer.css">
 </head>
+
 <body>
     <header>
-        <h1>Willkommen zu Mein Blog</h1>
+        <h1>Blog</h1>
     </header>
     <nav>
         <ul>
             <li><a href="#">Startseite</a></li>
             <li><a href="#">Über</a></li>
             <li><a href="#">Kontakt</a></li>
-            <li><form action="/blog/logout" method="post"><input type="submit" name="logout" value="Logout"></form></li>
+            <li>
+                <form action="/blog/logout" method="post"><input type="submit" name="logout" value="Logout"></form>
+            </li>
         </ul>
     </nav>
-    
 
-    <form id="post-form" method="post">
-        <div id="text-post-field-button-container">
-            <div id="text-post-field-info"></div>
-        <input type="text" id="post-text-field" name="text_input">
-        <input id="post-text-button" type="submit" value="send" name="upload_button">
-        <input type="file" id="file-input" name="file_input" accept="video/*,image/*">
-    <form>
+    <div id="main">
+        <div class="posts" id="posts">
+            <main id="post-field">
+                
+                
+            </main>
+        </div>
 
-    <div class="posts" id="posts">
-        <main id="post-field">
-        </main>
+        <form id="post-form" method="post">
+            <div id="text-post-field-button-container">
+                <div id="text-post-field-info"></div>
+                <input type="text" id="post-text-field" name="text_input">
+                <input id="post-text-button" type="submit" value="send" name="upload_button">
+                <input type="file" id="file-input" name="file_input" accept="video/*,image/*">
+            </div>
+            <div id="friends-list-add-friends-container">
+                <label for="friends">add friends:</label>
+                <select name="friends" id="friends">
+                </select>
+            </div>
+        </form>
     </div>
 
-    </div>
-    <div id="friends-list-add-friends-container">
-        <label for="friends">add friends:</label>
-     <select name="friends" id="friends">
-     </select>
-    </div>
     <footer>
-        <p>&copy; 2024 Mein Blog</p>
+        <p>&copy; 2024 Blog</p>
     </footer>
-    <!--<script type="module" src="/js/builder.js"></script>-->
+
     <script type="module" src="/js/builder.js"></script>
     <script type="module" src="/js/postEventHandler.js"></script>
     <script type="module" src="/js/friendslist.js"></script>
     <script type="module" src="/js/autoFetch.js"></script>
-    
-    
-    
 </body>
+
 </html>
