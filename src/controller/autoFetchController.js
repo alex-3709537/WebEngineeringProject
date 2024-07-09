@@ -19,7 +19,6 @@ const fetchPostCountForUID = async (req, res) =>{
 
 const fetchPostCountForUIDs = async (req, res) =>{
 
-    console.log("testtttttt: " + req.query.uids);
     const result = await getPostCountForUIDs(req.query.uids);
 
     if(result == "err"){
@@ -43,7 +42,6 @@ const fetchAllUsers = async (req, res) =>{
 
 const fetchPostsForUIDs = async (req, res) =>{
 
-    console.log("Fetching a maximum of " + req.query.maxAmountOfReturnedPosts + " posts for uid " + req.query.uid + " which were created before " + req.query.lastLoadedPostCreationDate + "...");
     const result = await getPostsByUids(req.query.uid, req.query.maxAmountOfReturnedPosts, req.query.lastLoadedPostCreationDate);
     res.json(result);
 }

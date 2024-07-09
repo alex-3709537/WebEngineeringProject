@@ -124,20 +124,15 @@ async function startAutoFetchRoutine(uids)
 {
     var oldData;
     var fetchedData = await getPostCountForUIDs(uids);
-    console.log("fetched post count: " + fetchedData.count);
 
     while (true)
     {
         oldData = fetchedData.count;
         fetchedData = await getPostCountForUIDs(uids);
 
-        //pls leave these for dev purposes
-        console.log("old:" + oldData);
-        console.log("new:" + fetchedData.count);
-
         if (+oldData != +fetchedData.count)
         {
-            console.log("Fetching " + (+fetchedData.count - +oldData) + " new posts...");
+            console.log("Fetching " + (+fetchedData.count - +oldData) + " new posts for uids " + uids);
             fetchLastNPosts(uids, +fetchedData.count - +oldData, new Date(new Date().setTime(new Date().getTime() + 60 * 60 * 1000)).toISOString(), false); //hier wird NICHT lastLoadedPostCreationDate übergeben, da der post aktueller sein wird!
         }
 
