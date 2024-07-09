@@ -112,8 +112,6 @@ async function getPostsByUids(uids, maxAmountOfReturnedPosts, lastLoadedPostCrea
             maxAmountOfReturnedPosts = 10;
         }
 
-        console.log("postdate: " + lastLoadedPostCreationDate);
-
         //der iso string vom date objekt berücksichtigt das zeitzonen-offset nicht...
         lastLoadedPostCreationDate = new Date(lastLoadedPostCreationDate);
         lastLoadedPostCreationDate = new Date(lastLoadedPostCreationDate.setTime(lastLoadedPostCreationDate.getTime() + (((Number)(new Date().getTimezoneOffset())) * -1) * 60 * 1000)).toISOString();
@@ -128,15 +126,10 @@ async function getPostsByUids(uids, maxAmountOfReturnedPosts, lastLoadedPostCrea
                 WHERE post.date < '${lastLoadedPostCreationDate}'
                 ORDER BY date DESC LIMIT ${maxAmountOfReturnedPosts}`);
                 
-            console.log(result);
             return result;
         }  
         else
         {
-            var ichHasseJavaScript = Array.isArray(uids) ? uids.join(', ') : ("" + uids);
-            console.log(ichHasseJavaScript);
-
-            console.log("date: "  + lastLoadedPostCreationDate);
 
             //Posts für bestimmte User zurückgeben
             const result = await connectAndQuery2(`
@@ -145,7 +138,6 @@ async function getPostsByUids(uids, maxAmountOfReturnedPosts, lastLoadedPostCrea
                 WHERE post.date < '${lastLoadedPostCreationDate}'
                 ORDER BY date DESC LIMIT ${maxAmountOfReturnedPosts}`);
 
-            console.log(result);
             return result;
         }
         
@@ -171,13 +163,10 @@ async function getPostCountForUIDs(uids){
             const result = await connectAndQuery2(`
                 SELECT COUNT (*) AS count
                 FROM post`);
-                console.log(result[0]);
             return result[0].count;
         }  
         else
         {
-            var ichHasseJavaScript = Array.isArray(uids) ? uids.join(', ') : ("" + uids);
-            console.log(ichHasseJavaScript);
             //Posts für bestimmte User zurückgeben
             const result = await connectAndQuery2(`
                 SELECT COUNT (*) AS count
