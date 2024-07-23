@@ -13,16 +13,9 @@
     <header>
         <h1>Blog</h1>
     </header>
-    <nav>
-        <ul>
-            <li><a href="#">Startseite</a></li>
-            <li><a href="#">Über</a></li>
-            <li><a href="#">Kontakt</a></li>
-            <li>
-                <form action="/blog/logout" method="post"><input type="submit" name="logout" value="Logout"></form>
-            </li>
-        </ul>
-    </nav>
+    
+    <form action="/blog/logout" method="post"><input type="submit" name="logout" value="Logout"></form>
+        
 
     <div id="main">
         <div class="posts" id="posts">
@@ -37,7 +30,7 @@
                 <div id="text-post-field-info"></div>
                 <input type="text" id="post-text-field" name="text_input">
                 <input id="post-text-button" type="submit" value="send" name="upload_button">
-                <input type="file" id="file-input" name="file_input" accept="video/*,image/*">
+                <input type="file" id="file-input" name="file_input" accept="video/mp4,image/jpg, image/png">
             </div>
             <div id="friends-list-add-friends-container">
                 <label for="friends">add friends:</label>

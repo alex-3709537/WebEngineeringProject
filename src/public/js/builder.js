@@ -2,8 +2,7 @@ import { likeEvent } from "./postEventHandler.js";
 
 export function getPostContainer(username, post) {
     try {
-        console.log("post: ", post);
-        console.log(username)
+       
         if (post == undefined) {
             throw new Error("post undefined")
         }

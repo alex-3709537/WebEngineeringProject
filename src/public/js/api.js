@@ -118,50 +118,6 @@ const mpfd = async (path, formData) => {
 
 
 /**
- * Methode kann genutzt werden um einzelne Bild Dateien von der vom Server zu fetchen. Kann ggf. verwendet werden, z.B. 
- * beim Fetchen von Profilbilder o.ä.
- * 
- * @param {string} path 
- * @param {object} data 
- * @returns 
- */
-const getBlob = async (path, data) => {
-    const url = new URL(`http://${servername}${path}`);
-
-    Object.keys(data).forEach(function (key, index) {
-        url.searchParams.append(key, data[key]);
-    });
-
-
-    const metaInfo = {
-        method: "GET",
-        headers: {
-            'Content-Type': 'application/json',
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'cross-site',
-        }
-    }
-
-    try {
-        const response = await fetch(url, metaInfo);
-
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
-        }
-
-        const result = await response.blob();
-        return result;
-
-    } catch (error) {
-        console.error('There was a problem with fetch operation:', error);
-    }
-}
-
-
-
-
-/**
  * 
  * @returns objekt mit userid und username
  */
@@ -196,7 +152,7 @@ export const getUserPostCount = async (uid) => {
 }
 export const getPostCountForUIDs = async (uids) => {
     const reqBody = { uids: uids };
-    console.log("reqbody: "+ JSON.stringify(reqBody));
+    
     const result = await sendReq("GET", "/blog/postCountForUIDs/", JSON.stringify(reqBody));
      return result;
  }
@@ -245,7 +201,7 @@ export const getFullPost = async (pid) => {
     const boundary = contentType.split('boundary=')[1];
     const text = await response.text();
     const parts = text.split(`--${boundary}`).filter(part => part && part !== '--');
-    console.log(text);
+   
     const postElements = {};
 
     parts.forEach(part => {
@@ -258,7 +214,7 @@ export const getFullPost = async (pid) => {
         if (contentDispositionMatch && typeMatch) {
             const fieldName = contentDispositionMatch[1].trim();
             const contentType = typeMatch[1].trim();
-            console.log(fieldName +" : "+ body);
+           
             if (contentType.startsWith('text/')) {
                 
                 postElements[fieldName] = body;
@@ -275,7 +231,7 @@ export const getFullPost = async (pid) => {
         }
     });
 
-  //  console.log("post: " + JSON.stringify(postElements));
+
     return postElements;
 }
 

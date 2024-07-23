@@ -33,7 +33,7 @@ export async function likeEvent(event){
   const element = event.target;
   const parentElement = element.parentElement;
   const pid = element.parentElement.id;
-  console.log("likeEvent Triggered : " + pid);
+  
   var result = {};
 
   const likeButton = parentElement.querySelector(".like-button");

@@ -26,7 +26,7 @@ window.onload = async function()
     lastLoadedPostCreationDate = new Date().toISOString();
 
     const currentUser = await getUserInfo();
-    console.log(currentUser);
+    
 
     //bisherige User Posts von allen Usern (-1) reinladen
     buildPostTimeline(-1, maxAmountOfPostsToBeFetchedAtATime, lastLoadedPostCreationDate);
@@ -63,11 +63,11 @@ async function fetchLastNPosts(users, maxAmountOfPostsToBeFetched, lastLoadedDat
 {
     //pids laden (das lastLoadedDate muss etwas in die zukunft verschoben werden, wenn der benutzer einen neuen post erstellt, da die verbindung zum server, um diesen dort abzuholen bissel zeit braucht...)
     const pids = await getUserPostPids(users, maxAmountOfPostsToBeFetched, setLastDate === true ? lastLoadedDate : new Date(new Date().setTime(new Date().getTime() + 60 * 60 * 1000 * 24)).toISOString());
-    console.log("pids fetched: " + pids.length);
+   
 
     for(let i = 0; i < pids.length; i++)
     {
-        console.log("Fetching post for pid " + pids[i].pid + " " + lastLoadedDate);
+        
         let post = await getFullPost(pids[i].pid);
 
         //versuchen, username aus cache zu holen
