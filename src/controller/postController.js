@@ -84,7 +84,7 @@ const createPost = async (req, res) => {
         console.log("Keine Datei gesendet");
     }
 
-    res.json({
+    res.stauts(200).json({
         message: "post erfolgreich hochgeladen",
         uid: req.session.user.uid, pid: result.insertId,
         username: req.session.user.username
@@ -160,7 +160,7 @@ const setLike = async (req, res) => {
                 await changeLike(result.lid, liked);
             }
         }
-        res.json({ message: "like changed" });
+        res.status(200).json({ message: "like changed" });
     } catch (err) {
         console.error(err.message);
     }

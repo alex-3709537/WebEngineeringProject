@@ -23,9 +23,9 @@ const loginUser = async (req, res) => {
             uid: result.uid
         };  // credentails im cookie speichern
 
-        res.redirect("home");  
+        res.status(301).redirect("home");  
     }else{
-        res.render("login", {error: "Anmeldung Fehlgeschlagen"})
+        res.status(401).render("login", {error: "Anmeldung Fehlgeschlagen"})
     }
    
 }
@@ -34,7 +34,7 @@ const loginUser = async (req, res) => {
  * Rendert das Registrier Formular
  */
 const registerView = (req, res) => {
-    res.render("register");
+    res.status(200).render("register");
 }
 
 /**
@@ -45,9 +45,9 @@ const registerUser = async (req, res) => {
     const result = await getUser(req.body.username);
 
     if(result instanceof Error){
-        res.render("register",{error: "Etwas ist schief gelaufen..."});   
+        res.status(401).render("register",{error: "Etwas ist schief gelaufen..."});   
     }else if(Object.keys(result).length != 0){
-        res.render("register",{error: "Der Benutzername ist bereits vergeben!"});   
+        res.status(401).render("register",{error: "Der Benutzername ist bereits vergeben!"});   
     }else{
         await setUser(req.body.username, req.body.password);
         const user = await getUser(req.body.username);
@@ -57,13 +57,13 @@ const registerUser = async (req, res) => {
             password : req.body.password,
             uid: user.uid
         };  // credentails im cookie speichern
-        res.redirect("register/success");
+        res.status(200).redirect("register/success");
     }
  
 } 
 
 const loginView = (req, res) => {
-    res.render("login");
+    res.status(200).render("login");
 
 }
 
@@ -75,7 +75,7 @@ const checkSignedIn = (req, res, next) => {
     if(req.session.user){
         next();     //If session exists, proceed to page
     } else {
-        res.redirect("/blog/login");
+        res.status(301).redirect("/blog/login");
     }
 }
 
@@ -84,14 +84,14 @@ const checkSignedIn = (req, res, next) => {
  */
 const logOut = (req, res) => {
     req.session.destroy();
-    res.redirect("/blog/login");
+    res.status(200).redirect("/blog/login");
 }
 
 /**
  * Lädt die Oberfläche nach erfogreicher Registrierung
  */
 const registrationSuccessView = (req, res) => {
-    res.render("registrationSuccess");
+    res.status(400).render("registrationSuccess");
 }
 
 module.exports = {

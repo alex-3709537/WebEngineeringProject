@@ -1,5 +1,5 @@
 const homeView = (req, res) => {
-    res.render('home', {username: req.session.user.username})
+    res.status(200).render('home', {username: req.session.user.username})
 }
 
 module.exports = {
