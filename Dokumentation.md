@@ -1,10 +1,10 @@
 # Dokumentation
 
 ## Installationsanleitung
-build.bat für Windows ausführen oder build_unix.sh für Linux oder IOS.
+build.bat für Windows ausführen oder build_unix.sh für Linux oder macOS.
 
 ## Projektstruktur
-Die Struktur orientiert sich an dem MVC Prinziep.
+Die Struktur orientiert sich an dem MVC Prinzip.
 
 ### public
 - **js**: Hier befinden sich alle JavaScript-Dateien, die für das Frontend bestimmt sind.
@@ -57,6 +57,22 @@ Die Struktur orientiert sich an dem MVC Prinziep.
 ## Dokumentation Eigenleistung
 
 ### Lukas Scharnweber
+
+Implementation des AutoFetch-Features zum automatischen Nachladen von neuen, sowie vergangenen Posts im Hintergrund, was kein manuelles Neuladen der Seite erfordert.
+Als Frontend-Leistung werden dabei...
+a) Posts, welche von Anderen erstellt wurden, während man selbst gerade aktiv ist, oben eingefügt und deren Inhalt (Text, Bild, Video) dargestellt.
+b) Ältere Posts unten eingefügt, wobei durch herunterscrollen weitere ältere Posts geladen werden können (Infinity-Scroll).
+Der Code dafür findet sich in der src\public\js\autoFetch.js-Datei.
+
+Die src/controller/autoFetchController.js-Datei enthält die Middlewares und beinhaltet das Error Handling, da die Methoden dieser Datei für das Tätigen von Requests verwendet werden. Zudem befindet sich hier der Teil des Backend-Codes, welcher für dieses Feature spezifische SQL-Anfragen aus der /src/model/mySqlHandler.js-Datei aufruft (nämlich:  getPostCountForUID, getPostsForUID, getPostsByUids, getAllUsers, getPostCountForUIDs) und deren result an das FrontEnd weiterdelegiert.
+
+Zugrunde liegende Ideen dieser Implementation waren, dass das Laden von neuen bzw. alten Posts ohne zutun des Users automatisch im Hintegrund geschehen soll, weshalb im Frontend alle zwei Sekunden in der startAutoFetchRoutine()-Methode eine Anfrage für die Anzahl der Posts für die spezifizierten UIDs gestellt wird, welche mit lokal pro User gecachten Werten verglichen wird und bei einer Änderung die Differenz von der neuen und der gespeicherten Anzahl von Posts für diesen User nachgeladen ubnd anschließend eingefügt wird. Dieser Feature funktioniert geräteübergreifend (wenn User A einen Post erstellt, wird dieser automatisch bei User B gefetched und angezeigt, sofern dieser die Posts von User A empfangen will (d.h. wenn die UID von User B in dem Array an zu überwachenden UIDs ist oder dieses -1 ist (alle Posts laden))).
+
+Weitegehend wurde während des Entwicklungsvorgangs dieses Features die Entscheidung getroffen, die Anzahl der benötigten Requests während des Ladevorgangs der initial angezeigten Timeline möglichst gering zu halten, wodurch unter anderem das lokale Caching der zu UIDs zugehörigen Usernames beim initalen Laden der Timeline in der buildPostTimeline()-Funktion entstand.
+
+Das Einfügen von Posts oben bzw unten von der Timeline wird durch das Differenzieren anhand des Creation Date eines Posts vorgenommen, wobei geringfügige Zusatzmaßnahmen benötigt werden, um die Korrektheit der erstellten Logik auch bei hohen Serverladezeiten etc. zu gewährleisten; genaueres hierzu in der Dokumentation der fetchLastNPosts-Methode, welche das Laden von jeglichen Posts übernimmt.
+
+
 
 ### Sebastian Albert
 
