@@ -84,7 +84,7 @@ const createPost = async (req, res) => {
         console.log("Keine Datei gesendet");
     }
 
-    res.stauts(200).json({
+    res.status(200).json({
         message: "post erfolgreich hochgeladen",
         uid: req.session.user.uid, pid: result.insertId,
         username: req.session.user.username
