@@ -78,41 +78,41 @@ Das Einfügen von Posts oben bzw unten von der Timeline wird durch das Differenz
 
 ### Alexander Fleig
 
+### Alexander Fleig
+
 #### Post erstellen Funktion
 
-Die Post erstellen Funktion dient dazu, dass der User auf der Webseite hochladen kann die dann von anderen Usern gesehen werden können. Das umfasst Bilder, Videos und Text. Die Funktion erlaubt lediglich das erstellen von Posts, das anzeigen auf der GUI übernimmt die Autofetch Funktion.
+Die Post erstellen Funktion dient dazu, dass der User auf der Webseite Inhalte hochladen kann, die dann von anderen Usern gesehen werden können. Das umfasst Bilder, Videos und Texte. Die Funktion erlaubt lediglich das Erstellen von Posts; das Anzeigen auf der GUI übernimmt die Autofetch-Funktion.
 
 ##### Frontend
 
-Auf der Start GUI wird werden Input Felder angezeigt in der die User entweder einen Text Post in ein input vom `type="text"` eingeben können, ein Bild oder Video hochladen über input `type="file"` oder beides. Nachdem der submit button gedrückt wird, wird ein event in dem file postEventHandler.js getriggert, welches prüft ob Text eingefügt wurde oder ein Bild (damit keine leeren Posts gesendet werden können). Serverseitig würde es ebenfalls in der Datenbank abgefangen werden, allerdings verbessert es die User Experience wenn der User dierekt weiß wenn eine Aktion nicht möglich ist. Der Funktionsrumpf vom Event ruft die Funktion `setPost(form)` auf in der das FormData Formular übergibt, welches die User Input Daten beinhaltet. Hierbei wird das Keywort `await` benutzt, da auf die Response gewartet werden soll, damit der Post erst auch hochgeladen wird, wenn er tatsächlich auf dem Server gelandet ist. Die Funktion befindet sich in api.js. Diese Funktion ruft die Funktion `mpfd("/blog/post", formData)` auf und übergibt den Pfad + das Formular. Die Funktion `mpfd = async (path, formData)` sendet eine Request mit dem  FormData Objekt and den Server. Hierfür wird `fetch(url, metaInfo)` benutzt, wobei sich das FormData Objekt in metaInfo befindet.
+Auf der Start-GUI werden Input-Felder angezeigt, in die die User entweder einen Textpost in ein Input vom `type="text"` eingeben können, ein Bild oder Video hochladen über Input `type="file"` oder beides. Nachdem der Submit-Button gedrückt wird, wird ein Event in der Datei `postEventHandler.js` getriggert, welches prüft, ob Text eingefügt wurde oder ein Bild (damit keine leeren Posts gesendet werden können). Serverseitig würde es ebenfalls in der Datenbank abgefangen werden, allerdings verbessert es die User Experience, wenn der User direkt weiß, wenn eine Aktion nicht möglich ist. Der Funktionsrumpf des Events ruft die Funktion `setPost(form)` auf, in der das FormData-Formular übergeben wird, welches die User-Input-Daten beinhaltet. Hierbei wird das Keyword `await` benutzt, da auf die Response gewartet werden soll, damit der Post erst hochgeladen wird, wenn er tatsächlich auf dem Server gelandet ist. Die Funktion befindet sich in `api.js`. Diese Funktion ruft die Funktion `mpfd("/blog/post", formData)` auf und übergibt den Pfad und das Formular. Die Funktion `mpfd = async (path, formData)` sendet eine Request mit dem FormData-Objekt an den Server. Hierfür wird `fetch(url, metaInfo)` benutzt, wobei sich das FormData-Objekt in `metaInfo` befindet.
 
 ##### Backend
 
-Im Routes Folder befindet sich das File post.js, in der die Middlewares für den pfad "/" hinterlegt sind. Dabei rootet er zuerst auf die middleware `resizeImage`, die sich in dem Controller File postController.js befinden. Generell befinden sich alle middlewares, die für die Posts bereit stehen, in diesem File. Die Zeilen 
+Im Routes-Ordner befindet sich die Datei `post.js`, in der die Middlewares für den Pfad `"/"` hinterlegt sind (insgesamt `/blog/post/`). In `index.js` wird mit `app.use("/blog/post", checkSignedIn, post);` die Post-Route deklariert. Vorher wird aber noch die Middleware `checkSignedIn` aufgerufen, welche prüft, ob der User angemeldet ist. Falls nicht, wird er zu der Anmeldemaske redirected. 
+In `post.js` ruft er zuerst die Middleware `resizeImage` auf, die sich in der Controller-Datei `postController.js` befindet. Generell befinden sich alle Middlewares, die für die Posts bereitstehen, in dieser Datei. Die Zeilen 
 `if (!req.file || req.file.mimetype.split("/")[0] == "video") {
         return next();
 }`
-prüfen ob ein file Objekt in der Request enthalten ist, oder ob es sich um ein video handelt. Falls ja, dann wird die nächste Middleware aufgerufen. Ansonsten wird das npm paket `sharp` genutzt, mit dem dem die Metadaten des Bildes in eine Variable gespeichert werden. Mit `
-await sharp(req.file.buffer)
+prüfen, ob ein File-Objekt in der Request enthalten ist oder ob es sich um ein Video handelt. Falls ja, wird die nächste Middleware aufgerufen. Ansonsten wird das npm-Paket `sharp` genutzt, mit dem die Metadaten des Bildes in eine Variable gespeichert werden. Mit 
+`await sharp(req.file.buffer)
                 .resize(newWidth, newHeight) // Ändere die Größe auf 300x300
-                .toBuffer();
-` 
-wird die Größe des Bildes angepasst. Damit soll zum einem Speicherplatzt geschont werden. Zum anderen soll der traffic reduziert werden, da sonst lange ladezeiten bei den Posts entstehen können. Danach wird die createPost Middleware aufgerufen, welche den Text und/oder das Bild/Video in die Datenbank speichert. Hierbei werden Bild/Video und Text seperat an die Datenbank geschickt. Dies liegt daran, da bei der Entwicklung zuerst das senden von Text Nachrichten im Fokus stand und deshalb die Funktionen seperat implementiert wurden. Wenn der User nur ein Bild hochlädt, wird trozdem ein leerer Text in der Datenbank gespeichet was an der Datenbank Struktur liegt. Darauf und auf die Sql Schnittstelle wird später genauer eingegangen. Nachdem der Post in der Datenbank gespeichert wurde, wird response gesendet, mit dem Status code 200. Zusätzlich werden noch andere Daten in Form von JSON gesendet, unter anderem die id vom Post (`pid`), da diese in den HTML Post elementen gespeichert wird(id), damit die Like Funktion weiß, welcher Post geliked wurde. 
+                .toBuffer();`
+wird die Größe des Bildes angepasst. Damit soll zum einen Speicherplatz geschont werden. Zum anderen soll der Traffic reduziert werden, da sonst lange Ladezeiten bei den Posts entstehen können. Danach wird die Middleware `createPost` aufgerufen, welche den Text und/oder das Bild/Video in die Datenbank speichert. Hierbei werden Bild/Video und Text separat an die Datenbank geschickt. Dies liegt daran, dass bei der Entwicklung zuerst das Senden von Textnachrichten im Fokus stand und deshalb die Funktionen separat implementiert wurden. Wenn der User nur ein Bild hochlädt, wird trotzdem ein leerer Text in der Datenbank gespeichert, was an der Datenbankstruktur liegt. Darauf und auf die SQL-Schnittstelle wird später genauer eingegangen. Nachdem der Post in der Datenbank gespeichert wurde, wird eine Response gesendet, mit dem Statuscode 200. Zusätzlich werden noch andere Daten in Form von JSON gesendet, unter anderem die ID vom Post (`pid`), da diese in den HTML-Post-Elementen gespeichert wird (`id=pid`), damit die Like-Funktion weiß, welcher Post geliked wurde.
 
-##### Datenbank und Datenbankschittstelle
+##### Datenbank und Datenbankschnittstelle
 
-Allgemein haben wir uns für Sql als Datenbanksprache entschieden, da zum einen die gespeicherten Daten nicht dynamisch angelegt werden müssen und es gut implementierbar ist mit statischen Tabellen. Zum anderen herrscht mehr Vorerfahrung mit Sql, im Gegensatz zu anderen Alternatieven wie z.B MongoDB.
-In dem Ordner "model" befindet sich das File `mysqlHandler.js`, welches als Schnittstellt zur Datenbank dient. Dort befinden sich die Methoden `setPost(uid, post)` und `setFile(pid, data, type)` welche für das speichern von den Daten genutzt werden. In der SQL Tabelle "post" werden werden Metadaten von den Post gespeichert, sowie der Text selber und die id (pid) vom Post. Desweiteren gibt es die Tabelle `files`, in der die Bild/Video Datei enthalten ist, sowie Metadaten und die File id (fid). Siehe Abb.
+Allgemein haben wir uns für SQL als Datenbanksprache entschieden, da zum einen die gespeicherten Daten nicht dynamisch angelegt werden müssen und es gut implementierbar ist mit statischen Tabellen. Zum anderen herrscht mehr Vorerfahrung mit SQL, im Gegensatz zu anderen Alternativen wie z.B. MongoDB.
+In dem Ordner `model` befindet sich die Datei `mysqlHandler.js`, welche als Schnittstelle zur Datenbank dient. Dort befinden sich die Funktionen `setPost(uid, post)` und `setFile(pid, data, type)`, welche für das Speichern der Daten genutzt werden. In der SQL-Tabelle `post` werden Metadaten der Posts gespeichert, sowie der Text selbst und die ID (`pid`) des Posts. Des Weiteren gibt es die Tabelle `files`, in der die Bild-/Videodatei enthalten ist, sowie Metadaten und die File-ID (`fid`). Siehe Abb.
 
 ![alt text](PostSql.drawio.png)
 
-fid dient als Fremdschlüssel und steht in Realtion zu pid. Hierbei herscht eine 1-zu-1 Beziehung. Deshalb wird, wie oben schon erwähnt, immer ein Text gespeichert, auch wenn nur ein Bild/Video gesendet wird. Denn nur über einen Post Eintrag entsteht eine Verknüpfung zu einem Bild/Video. 
+Die `fid` dient als Fremdschlüssel und steht in Relation zur `pid`. Hierbei herrscht eine 1-zu-1-Beziehung. Deshalb wird, wie oben schon erwähnt, immer ein Text gespeichert, auch wenn nur ein Bild/Video gesendet wird. Denn nur über einen Post-Eintrag entsteht eine Verknüpfung zu einem Bild/Video. 
 
+Die beiden Funktionen rufen jeweils die Funktion `connectAndQuery2` auf. In dieser Funktion wird das `mysql2`-Paket genutzt, damit asynchrone Requests an den SQL-Server gesendet werden können. In der vorherigen Funktion, `connectAndQuery`, wurde das Paket `mysql` verwendet, welches keine asynchronen Funktionen bereitstellt. Um das zu umgehen, wird das `util`-Paket verwendet, um eine Funktion in eine asynchrone Promise-Funktion zu konvertieren. Diese Funktion ist deshalb noch enthalten, da wir erst während der Entwicklung bemerkt haben, dass `mysql2` asynchrone Funktionen bereitstellt. Wir haben uns trotzdem dazu entschieden, beide Funktionen beizubehalten, da es wenig Umstände macht.
 
-
-Die beiden methoen rufen jeweilst die Funktion `connectAndQuery2` auf. In dieser Funktion wird das mysql2 package genutzt damit asynchrone requests an den Sql Server gesendet werden können. In der vorherigen Funktion, `connectAndQuery`, wurde das package `mysql` verwendet welches keine Asynchronen Funktionen bereit stellt. Um das zu umgehen, wird das util package verwendet um eine Funktion in eine Asynchrone Promise Funktion zu konvertieren. Diese Funktion ist deshalb noch enthalten, da während wir erst während der Entwicklung bemerkt haben, das mysql2 asynchrone Funktionen bereit stellt. Wir haben uns trotzdem dazu entschieden, beide Funktionen bei zu behalten, da es wenig Umstände.
-
-Wenn es einen Fehler im Zusammenhang mit der Sql Datenbank gibt, dann wird er im try-catch block verarbeitet bzw. ausgegeben. Da die Columns in der Datenbank gewisse Restrictions haben, wie z.B. das der username UNIQUE sein muss, kann dies eine Ursache für Fehler sein. 
-
+Wenn es einen Fehler im Zusammenhang mit der SQL-Datenbank gibt, dann wird er im try-catch-Block verarbeitet bzw. ausgegeben. Da die Spalten in der Datenbank gewisse Restrictions haben, wie z.B. dass der Username `UNIQUE` sein muss, kann dies eine Ursache für Fehler sein.
 
 https://github.com/lukaspanni/Lecture_Webengineering_2024/blob/main/Material/Notes/Bewertung_Projektarbeit.md
+
