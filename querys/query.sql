@@ -18,8 +18,8 @@ create table post (
 
 
 create table friends (
-    fid int not null AUTO_INCREMENT,
+    frid int not null AUTO_INCREMENT,
     uid int not null,
     friendname varchar(64) not null,
-    PRIMARY KEY(fid),
+    PRIMARY KEY(frid),
 );
