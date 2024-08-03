@@ -16,8 +16,8 @@ const upload = multer({ storage: storage });
 
 router.post("/", upload.single("file_input"), resizeImage, createPost);
 
-router.get("/", getFullPost);
+router.get("/:pid", getFullPost);
 
-router.post("/like", setLike);
+router.post("/like/:pid/:liked", setLike);
 
 module.exports = router;

@@ -88,12 +88,13 @@ const fetchView = async (path, data = {}) => {
 
 /**
  * Methode wird verwendet um formData Objekte an dem Server zu senden. (Der Inhalt kommt aus dem Feldern im HTML <from> )
+ * Die Methode nutzt multipart/from-data content type
  * 
  * @param {*} path 
  * @param {*} formData 
  * @returns 
  */
-const mpfd = async (path, formData) => {
+const sendReqMpfd = async (path, formData) => {
     const url = `http://${servername}${path}`;
 
     const metaInfo = {
@@ -136,7 +137,7 @@ export const getAllUserInfo = async () => {
 }
 
 export const getUserByUID = async (uid) => {
-    const result = await sendReq("GET", "/blog/user/uid", {uid:uid});
+    const result = await sendReq("GET", `/blog/user/${uid}`);
     return result;
 }
 export const getPostContainer = async (username, input) => {
@@ -171,7 +172,7 @@ export const getUserPostPids = async (uid, postCount, lastLoadedPostCreationDate
  */
 export const setPost = async (form) => {
     const formData = new FormData(form);
-    const result = await mpfd("/blog/post", formData);
+    const result = await sendReqMpfd("/blog/post", formData);
     
     return result;
 }
@@ -184,9 +185,9 @@ export const setPost = async (form) => {
  * @returns Objekt mit html elementen
  */
 export const getFullPost = async (pid) => {
-    const path = "/blog/post";
+    const path = `/blog/post/${pid}`;
     const data = {
-        pid: pid
+       
     };
 
     const url = new URL(`http://${servername}${path}`);
@@ -236,6 +237,6 @@ export const getFullPost = async (pid) => {
 }
 
 export const changeLike = async (pid, liked) => {
-    const result = sendReq("POST", "/blog/post/like", {pid:pid, liked:liked});
+    const result = sendReq("POST", `/blog/post/like/${pid}/${liked}`);
     return result;
 }

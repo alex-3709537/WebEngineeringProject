@@ -12,7 +12,7 @@ const userInfo = (req, res) => {
 }
 
 const userInfoByUID = async (req, res) => {
-    const result = await getUserByUID(req.query.uid);
+    const result = await getUserByUID(req.params.uid);
     res.status(200).json({username: result.username, uid: result.uid});
 }
 

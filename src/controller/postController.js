@@ -17,7 +17,7 @@ const maxImageSize = 500;
 
 const getFullPost = async (req, res) => {
     try {
-        const result = await getPostByPid(req.query.pid);
+        const result = await getPostByPid(req.params.pid);
         const boundary = 'boundary12345';
 
         const fullPostPromises = result.map(async (element) => {
@@ -142,8 +142,8 @@ const resizeImage = async (req, res, next) => {
 
 const setLike = async (req, res) => {
     try {
-        const liked = req.body.liked;
-        const pid = req.body.pid;
+        const liked = req.params.liked;
+        const pid = req.params.pid;
         const uid = req.session.user.uid;
         
         if( liked > 1 ) throw new Error("Like value must not be higher then 1");
