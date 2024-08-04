@@ -7,19 +7,16 @@ const path = require("path");
 
 async function getUser(username) {
     try {
-        const result = await connectAndQuery(`SELECT * FROM users WHERE username LIKE '${username}'`);
-
+        const result = await connectAndQuery2(`SELECT * FROM users WHERE username LIKE ?`, [username]);
         return (result.length == 0) ? {} : result[0];
     } catch (err) {
         console.error(err.message);
         return err;
     }
 }
-
 async function getUserByUID(uid) {
     try {
-        const result = await connectAndQuery(`SELECT * FROM users WHERE uid LIKE ${uid}`);
-         
+        const result = await connectAndQuery2(`SELECT * FROM users WHERE uid LIKE ?`, [uid]);
         return result[0];
     } catch (err) {
         console.error(err.message);
@@ -29,7 +26,7 @@ async function getUserByUID(uid) {
 
 async function getAllUsers() {
     try {
-        const result = await connectAndQuery(`SELECT uid, username FROM users`);
+        const result = await connectAndQuery2(`SELECT uid, username FROM users`);
          
         return result;
     } catch (err) {
@@ -44,7 +41,7 @@ async function getAllUsers() {
 //[{"COUNT(*)":11}]
 async function getPostCountForUID(uid) {
     try {
-        const result = await connectAndQuery(`SELECT COUNT(*) FROM post WHERE uid LIKE '${uid}'`);
+        const result = await connectAndQuery2(`SELECT COUNT(*) FROM post WHERE uid LIKE ?`,[uid]);
         var resultString = JSON.stringify(result); //[{"COUNT(*)":11}]
         resultString = resultString.substring(resultString.indexOf(":") + 1); //11}]
         resultString = resultString.substring(0, resultString.indexOf("}")); //11
@@ -58,7 +55,7 @@ async function getPostCountForUID(uid) {
 
 async function getPostsForUID(uid, maxAmountOfReturnedPosts) {
     try {
-        const result = await connectAndQuery(`SELECT * FROM post WHERE uid LIKE '${uid}' ORDER BY date DESC LIMIT ${maxAmountOfReturnedPosts}`);
+        const result = await connectAndQuery2(`SELECT * FROM post WHERE uid LIKE ? ORDER BY date DESC LIMIT ?`,[uid, maxAmountOfReturnedPosts]);
         
         return result;
     } catch (err) {
@@ -67,11 +64,9 @@ async function getPostsForUID(uid, maxAmountOfReturnedPosts) {
     }
 }
 
-
 async function setUser(username, password) {
     try {
-        const result = await connectAndQuery(`INSERT INTO users (username, password, creationDate) VALUES('${username}','${password}', CURRENT_TIMESTAMP)`);
-
+        const result = await connectAndQuery2(`INSERT INTO users (username, password, creationDate) VALUES(?, ?, CURRENT_TIMESTAMP)`, [username, password]);
         return result;
     } catch (err) {
         console.error(err.message);
@@ -79,10 +74,9 @@ async function setUser(username, password) {
     }
 }
 
-
 async function setPost(uid, post) {
     try {
-        const result = await connectAndQuery(`INSERT INTO post (uid, post, date) VALUES(${uid},'${post}', CURRENT_TIMESTAMP)`);
+        const result = await connectAndQuery2(`INSERT INTO post (uid, post, date) VALUES(?, ?, CURRENT_TIMESTAMP)`, [uid, post]);
 
         return result;
     } catch (err) {
@@ -200,31 +194,9 @@ async function getPostByPid(pid){
     }
 }
 
-async function connectAndQuery(query) {
-    let con;
-    try {
-        con = mysql.createConnection(sqlConfig);
-        const connect = util.promisify(con.connect).bind(con);  // baut die funktion in eine promise funktion um
-        const queryPromise = util.promisify(con.query).bind(con);
 
-        await connect();
-        //console.log("Connection to Database successfull");
 
-        const result = await queryPromise(query);
-        //console.log("Sql Query executed successfully!");
-
-        return result;
-    } catch (err) {
-        console.error(err.message);
-        throw err;
-    } finally {
-        if (con) {
-            con.end();
-        }
-    }
-}
-
-async function connectAndQuery2(query, data) {
+async function connectAndQuery2(query, data = []) {
     const connection = await mysql2.createConnection(sqlConfig);
 
     try {
