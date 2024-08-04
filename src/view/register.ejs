@@ -3,22 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <link href="../style/login.css" rel="stylesheet" type="text/css"></link>
+    <title>Register new User</title>
+    <link href="../style/login.css" rel="stylesheet">
+
 </head>
 <body>
-    <h1>Register</h1>
     <form method="post">
-    <div>
-        <input type="text" id="username" name="username">
-        <input type="password" id="password" name="password">
-        <input type="submit"> 
-    </div>
-    <% if (typeof error !== 'undefined') { %>
-       
-         <p class="error-info"><%= error %></p>
-      
-    <% } %>
-</form>    
+        <h1>Register</h1>
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" autofocus>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password">
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Register">
+        </div>
+        
+        <% if (typeof error !== 'undefined') { %>
+            <p class="error-info"><%= error %></p>
+        <% } %>
+    </form>
+    <script src="/js/login.js"></script>
 </body>
 </html>
