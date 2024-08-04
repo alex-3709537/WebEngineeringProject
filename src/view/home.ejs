@@ -12,17 +12,14 @@
 <body>
     <header>
         <h1>Blog</h1>
+        <form action="/blog/logout" method="post"><input id="logoutButton" type="submit" name="logout" value="Logout"></form>
     </header>
     
-    <form action="/blog/logout" method="post"><input type="submit" name="logout" value="Logout"></form>
-        
+       
 
     <div id="main">
         <div class="posts" id="posts">
-            <main id="post-field">
-                
-                
-            </main>
+            <main id="post-field"></main>
         </div>
 
         <form id="post-form" method="post">

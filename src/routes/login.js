@@ -10,9 +10,6 @@ const {
     logOut
 } = require("../controller/loginController");
 
-router.get("/", function (req, res) {
-    res.send("Start seite html formular");
-});
 
 
 router.get("/login", loginView);

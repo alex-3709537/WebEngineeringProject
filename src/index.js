@@ -9,8 +9,6 @@ const index = require("./routes/index");
 const post = require("./routes/post");
 const autoFetch = require("./routes/autoFetch");
 
-const {test} = require("./test.js");
-
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
