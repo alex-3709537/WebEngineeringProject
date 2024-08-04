@@ -8,6 +8,7 @@ const user = require("./routes/user");
 const index = require("./routes/index");
 const post = require("./routes/post");
 const autoFetch = require("./routes/autoFetch");
+const friendController = require("./controller/friendController");
 
 const {test} = require("./test.js");
 
@@ -43,6 +44,7 @@ app.use("/blog/user", checkSignedIn, user);
 app.use("/blog/home", checkSignedIn, index);
 app.use("/blog/post", checkSignedIn, post);
 app.use("/blog/", checkSignedIn, autoFetch);
+app.use("/blog", friendController);
 
 
 
