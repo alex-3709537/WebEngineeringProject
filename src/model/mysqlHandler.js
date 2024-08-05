@@ -38,6 +38,16 @@ async function getAllUsers() {
     }
 }
 
+async function getFriendsByUserId(uid) {
+    try {
+        const result = await connectAndQuery(`SELECT friendname FROM friends WHERE uid = ${uid}`);
+        return result;
+    } catch (err) {
+        console.error(err.message);
+        return err;
+    }
+}
+
 //result[0] ein object mit Parameter "COUNT(*)", was mit js nicht direkt abgegriffen werden kann wegen den Sonderzeichen;
 //daher JSON.stringify(result) als workaround.
 //Hinweis: .indexof(":") ist hier sicher, da das resultString-Objekt immer nach folgendem schema aufgebaut ist:
@@ -353,5 +363,6 @@ module.exports = {
     changeLike,
     createLike,
     deleteLike,
-    addFriend
+    addFriend,
+    getFriendsByUserId
 }

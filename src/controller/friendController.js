@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { addFriend } = require('../model/mysqlHandler'); // Importiere die addFriend Methode
+const Friend = require('../model/mysqlHandler');
 
 router.post('/addFriend', async (req, res) => {
     const { uid, friendname } = req.body;
@@ -14,4 +15,16 @@ router.post('/addFriend', async (req, res) => {
     }
 });
 
+
+
+exports.listFriends = async (req, res) => {
+    const userId = req.session.userId; // UID des aktuellen Benutzers aus der Session
+    try {
+        const friends = await Friend.getFriendsByUserId(userId);
+        res.render('home', { friends });
+    } catch (error) {
+        res.status(500).send('Fehler beim Abrufen der Freunde');
+    }
+        
+};
 module.exports = router;
