@@ -18,7 +18,7 @@ router.post('/addFriend', async (req, res) => {
 
 
 exports.listFriends = async (req, res) => {
-    const userId = req.session.userId; // UID des aktuellen Benutzers aus der Session
+    const userId = req.session.user.uid; // UID des aktuellen Benutzers aus der Session
     try {
         const friends = await Friend.getFriendsByUserId(userId);
         res.render('home', { friends });
