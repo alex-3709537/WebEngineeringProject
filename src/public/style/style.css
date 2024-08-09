@@ -80,6 +80,9 @@ footer {
     height: 67vh;
     display: flex;
     flex-direction: column; /* Vertikales Stapeln der Posts */
+    border: 3px solid #dddddd;
+    border-radius: 5px;
+    background-color: #eeeeee;
 }
 
 #main {
@@ -87,9 +90,11 @@ footer {
     max-width: 940px;
     padding: 20px;
     padding-right: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
-    border-radius: 8px;
+    
+    border-radius: 5px;
+    
+    
+    
     margin: 20px auto; /* Zentriert den Block horizontal */
 }
 
@@ -97,12 +102,10 @@ footer {
     display: flex;
     flex-direction: column; /* Sicherstellen, dass die Posts vertikal gestapelt werden */
     width: 100%; /* Optional: Stellt sicher, dass der Container die volle Breite einnimmt */
+    background-color: #eeeeee;
+    border-radius: 5px;
 }
 
-#post-field > .post {
-    margin-bottom: 20px; /* Abstand zwischen den Posts */
-    margin-right: 20px;
-}
 
 #logoutButton {
     background-color: #746d6d;
@@ -117,3 +120,59 @@ footer {
 #logoutButton:hover {
     background-color: #746d6d;
 }
+
+input[type=submit] { 
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    border:none;
+ 
+}
+input[type=submit]:hover{
+    background-color: #0056b3;
+    
+}
+input[type=text] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 0 auto;
+    font-size: 16px;
+    width: 60%;
+}
+input[type=file] {
+    display: none;
+}
+
+/* Stil für das Label, das den Datei-Input ersetzt */
+label.custom-file-upload {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 7px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer; /* Cursor als Zeiger, um die Klickbarkeit anzuzeigen */
+    border: none;
+}
+
+label.custom-file-upload:hover {
+    background-color: #0056b3;
+}
+
+#control-panel{
+    margin-top: 10px;
+    background-color: #eeeeee;
+    border-radius: 5px;
+    padding-left:5px;
+    padding-right: 5px;
+    border: 3px solid #dddddd;
+}
+

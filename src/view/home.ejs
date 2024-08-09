@@ -23,11 +23,16 @@
         </div>
 
         <form id="post-form" method="post">
+            <div id="control-panel">
             <div id="text-post-field-button-container">
                 <div id="text-post-field-info"></div>
                 <input type="text" id="post-text-field" name="text_input">
                 <input id="post-text-button" type="submit" value="send" name="upload_button">
                 <input type="file" id="file-input" name="file_input" accept="video/mp4,image/jpg, image/png">
+                <label for="file-input" class="custom-file-upload">
+                    Datei auswählen
+                </label>
+                <p id="file-name" class="file-name"></p>
             </div>
             <div id="friends-list-add-friends-container">
                 <label for="friends">add friends:</label>
@@ -35,6 +40,7 @@
                     <option>Please select...</option>
                 </select>
                 <button id="addFriendButton">Add friend</button>
+            </div>
             </div>
         </form>
     </div>

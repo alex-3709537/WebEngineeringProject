@@ -7,9 +7,12 @@
 .flex-container-post {
     padding: 10px;
     display: flexbox; /* Korrektur hier */
-    border: 3px solid grey;
+    
     width: 100%;
     margin: 10px ; /* Korrigiert die Abstände */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: white;
 }
 
 .flex-container-post-username {
@@ -37,4 +40,8 @@
 
 .like-count, .dislike-count {
     font-weight: bold;
+}
+.post{
+    margin-bottom: 20px; /* Abstand zwischen den Posts */
+    margin-right: 20px;
 }

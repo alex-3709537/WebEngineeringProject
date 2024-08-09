@@ -48,6 +48,8 @@ const registerUser = async (req, res) => {
         res.status(401).render("register",{error: "Etwas ist schief gelaufen..."});   
     }else if(Object.keys(result).length != 0){
         res.status(401).render("register",{error: "Der Benutzername ist bereits vergeben!"});   
+    }else if(req.body.password.length < 4){
+        res.status(401).render("register",{error: "Das Passwort muss mindestens 4 Zeichen lang sein!"});   
     }else{
         await setUser(req.body.username, req.body.password);
         const user = await getUser(req.body.username);

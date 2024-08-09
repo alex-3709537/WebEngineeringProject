@@ -9,6 +9,7 @@ const postField = document.getElementById("post-text-field");
 document.getElementById("post-form").addEventListener("submit", async function(event) {
   event.preventDefault(); // Verhindert das Standardverhalten (Seiten-Reload);
   const form = event.target;
+  document.getElementById('file-name').textContent = "";
 
   if ((postField.value === undefined || postField.value === null || postField.value === "" || postField.value.trim() === "" || postField.value === "Enter a text to post!") && document.getElementById("file-input").value === "")
   {
@@ -96,3 +97,8 @@ export async function likeEvent(event){
   }
   
 }
+
+document.getElementById('file-input').addEventListener('change', function() {
+  var fileName = this.files[0].name;
+  document.getElementById('file-name').textContent = "Ausgewählte Datei: " + fileName;
+});
