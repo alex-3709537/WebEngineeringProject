@@ -110,7 +110,8 @@ async function setFile(pid, data, type) {
 
 async function addFriend(uid, friendname) {
     try {
-        const result = await connectAndQuery(`INSERT INTO friends (uid, friendname) VALUES(${uid}, '${friendname}')`);
+        const result = await connectAndQuery2(`INSERT INTO friends (uid, friendname) VALUES(?, ?)`, [uid, friendname]);
+
         return result;
     } catch (err) {
         console.error(err.message);
