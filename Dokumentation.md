@@ -74,7 +74,7 @@ Das Einfügen von Posts oben bzw unten von der Timeline wird durch das Differenz
 
 
 
-### Sebastian Albert Matrikelnummer: 4343734
+### Sebastian Albert 
 Ich musste die Funktion Freunde hinzufügen und Freunde anzeigen entwickeln. Wir entwickeln einen Blog und da ist es üblich, dass man Freunde hinzufügen kann. Deswegen darf die Methode bei unserem Blog nicht fehlen. 
 
 In einem dynamischen Dropdown menu werden alle user angezeigt. Wenn man einen user ausgewählt hat, dann kann man auf den Button AddFriend drücken. Der Freundename und die user ID des angemeldeten user wird in die Datenbank hochgeladen. Das dynamische Dropdown menu und der Button AddFriend steht in der Datei home.ejs. Die Programmierbare Logik zu den dynamischen Dropdown menu und dem Button AddFriend steht in der Datei friendslist.js. Die Verknüpfung zwischen dem Model und der View passiert im Controller. In meinem Fall in der Datei friendController.js. Im Model in der Datei mysqlHandler.js gibt es die Methode addFriend, die die uid und der friendname in die Datenbank Tabelle friends ladet.
@@ -119,5 +119,5 @@ Die beiden Funktionen rufen jeweils die Funktion `connectAndQuery2` auf. In dies
 
 Wenn es einen Fehler im Zusammenhang mit der SQL-Datenbank gibt, dann wird er im try-catch-Block verarbeitet bzw. ausgegeben. Da die Spalten in der Datenbank gewisse Restrictions haben, wie z.B. dass der Username `UNIQUE` sein muss, kann dies eine Ursache für Fehler sein.
 
-https://github.com/lukaspanni/Lecture_Webengineering_2024/blob/main/Material/Notes/Bewertung_Projektarbeit.md
+
 
