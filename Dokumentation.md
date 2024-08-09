@@ -74,7 +74,14 @@ Das Einfügen von Posts oben bzw unten von der Timeline wird durch das Differenz
 
 
 
-### Sebastian Albert
+### Sebastian Albert Matrikelnummer: 4343734
+Ich musste die Funktion Freunde hinzufügen und Freunde anzeigen entwickeln. Wir entwickeln einen Blog und da ist es üblich, dass man Freunde hinzufügen kann. Deswegen darf die Methode bei unserem Blog nicht fehlen. 
+
+In einem dynamischen Dropdown menu werden alle user angezeigt. Wenn man einen user ausgewählt hat, dann kann man auf den Button AddFriend drücken. Der Freundename und die user ID des angemeldeten user wird in die Datenbank hochgeladen. Das dynamische Dropdown menu und der Button AddFriend steht in der Datei home.ejs. Die Programmierbare Logik zu den dynamischen Dropdown menu und dem Button AddFriend steht in der Datei friendslist.js. Die Verknüpfung zwischen dem Model und der View passiert im Controller. In meinem Fall in der Datei friendController.js. Im Model in der Datei mysqlHandler.js gibt es die Methode addFriend, die die uid und der friendname in die Datenbank Tabelle friends ladet.
+
+
+Ich wollte noch programmieren das man die Freunde die ein bestimmter Benutzer hinzugefügt hat, in eine dynamischen Liste ausgibt. Das habe ich leider zeitlich nicht mehr geschafft. Die Logik hierzu habe ich zwar entwickelt, aber beim Ausführen kommt eine Fehlermeldung. Deshalb habe ich die dynamische Liste in der Datei home.ejs wieder rausgelöscht. Im Model in der Datei mysqlHandler.js gibt es die Methode getFriendsByUserId, die Freundenamen die der angemeldete Benutzer als Freund ausgewählt hat holt. Im Controller in der Datei friendController.js ist wieder die Verknüpfung zwischen View und Model. Es gibt dort die Methode listFriends, die die uid der Methode getFriendByUserId im Model in der Datei mysqlHandler.js übergibt. Die Methode listFriends erhaltet die Freunde von dem Benutzer der sich angemeldet hat in dem Objekt friends. Die dynamische Liste wie oben bereits erwähnt wurde gelöscht, da sonst die Webseite nicht angezeigt wird. Das Objekt friends wird eigentlich hier aufgerufen, um die dynamische Liste auf der Webseite zu erzeugen. Ich habe noch eine routes Datei erstellt, nämlich in der Datei friend.js und ich habe noch die index.js überarbeitet. In der index.js Datei refferenzieren die Pfade auf die routes Datei friend.js und auf die controller Datei friendController.js. In der routes Datei friend.js refferenzieren die Pfade auf die Controller Datei friendController.js.
+
 
 ### Alexander Fleig
 

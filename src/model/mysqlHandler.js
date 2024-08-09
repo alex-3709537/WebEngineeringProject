@@ -35,6 +35,16 @@ async function getAllUsers() {
     }
 }
 
+async function getFriendsByUserId(uid) {
+    try {
+        const result = await connectAndQuery(`SELECT friendname FROM friends WHERE uid = ${uid}`);
+        return result;
+    } catch (err) {
+        console.error(err.message);
+        return err;
+    }
+}
+
 //result[0] ein object mit Parameter "COUNT(*)", was mit js nicht direkt abgegriffen werden kann wegen den Sonderzeichen;
 //daher JSON.stringify(result) als workaround.
 //Hinweis: .indexof(":") ist hier sicher, da das resultString-Objekt immer nach folgendem schema aufgebaut ist:
@@ -91,6 +101,16 @@ async function setFile(pid, data, type) {
         // Datei lesen
         const result = await connectAndQuery2(`INSERT INTO files (name, type, data, fid) VALUES(CURRENT_TIMESTAMP, ?, ?, ?)`, [type, data, pid]);
 
+        return result;
+    } catch (err) {
+        console.error(err.message);
+        return "err";
+    }
+}
+
+async function addFriend(uid, friendname) {
+    try {
+        const result = await connectAndQuery(`INSERT INTO friends (uid, friendname) VALUES(${uid}, '${friendname}')`);
         return result;
     } catch (err) {
         console.error(err.message);
@@ -314,5 +334,7 @@ module.exports = {
     getDistinctLike,
     changeLike,
     createLike,
-    deleteLike
+    deleteLike,
+    addFriend,
+    getFriendsByUserId
 }

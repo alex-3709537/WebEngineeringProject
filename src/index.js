@@ -8,6 +8,8 @@ const user = require("./routes/user");
 const index = require("./routes/index");
 const post = require("./routes/post");
 const autoFetch = require("./routes/autoFetch");
+const friendController = require("./controller/friendController");
+const friendRoutes = require("./routes/friend");
 
 const path = require("path");
 const cookieParser = require("cookie-parser");
@@ -41,7 +43,8 @@ app.use("/blog/user", checkSignedIn, user);
 app.use("/blog/home", checkSignedIn, index);
 app.use("/blog/post", checkSignedIn, post);
 app.use("/blog/", checkSignedIn, autoFetch);
-
+app.use("/blog", friendController)
+app.use("/blog/friends", checkSignedIn, friendRoutes);
 
 
 

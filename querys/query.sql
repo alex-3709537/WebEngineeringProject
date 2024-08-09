@@ -15,3 +15,11 @@ create table post (
     date datetime, 
     PRIMARY KEY(pid)
 );
+
+
+create table friends (
+    frid int not null AUTO_INCREMENT,
+    uid int not null,
+    friendname varchar(64) not null,
+    PRIMARY KEY(frid),
+);
