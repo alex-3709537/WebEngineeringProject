@@ -78,8 +78,6 @@ Das Einfügen von Posts oben bzw unten von der Timeline wird durch das Differenz
 
 ### Alexander Fleig
 
-### Alexander Fleig
-
 #### Post erstellen Funktion
 
 Die Post erstellen Funktion dient dazu, dass der User auf der Webseite Inhalte hochladen kann, die dann von anderen Usern gesehen werden können. Das umfasst Bilder, Videos und Texte. Die Funktion erlaubt lediglich das Erstellen von Posts; das Anzeigen auf der GUI übernimmt die Autofetch-Funktion.
